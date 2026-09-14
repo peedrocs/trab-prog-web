@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <rect width="400" height="300" fill="#e8f5e9"/>
+  <g stroke="#263238" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+    <rect x="60" y="190" width="280" height="48" rx="4" fill="#4fc3f7"/>
+    <path d="M80 190 v18 M100 190 v10 M120 190 v18 M140 190 v10 M160 190 v18 M180 190 v10 M200 190 v18 M220 190 v10 M240 190 v18 M260 190 v10 M280 190 v18 M300 190 v10 M320 190 v18" fill="none" stroke-width="3"/>
+    <g transform="translate(110 95) rotate(-10)">
+      <rect x="-45" y="-25" width="90" height="50" rx="8" fill="#f48fb1"/>
+      <rect x="-8" y="-27" width="40" height="54" rx="3" fill="#5c6bc0"/>
+    </g>
+    <g transform="translate(215 120) rotate(-25)">
+      <rect x="-125" y="-16" width="26" height="32" rx="8" fill="#f48fb1"/>
+      <rect x="-105" y="-17" width="22" height="34" fill="#b0bec5"/>
+      <rect x="-83" y="-16" width="158" height="32" fill="#fdd835"/>
+      <path d="M-81 -5 H73 M-81 5 H73" fill="none" stroke="#f9a825" stroke-width="3"/>
+      <path d="M75 -16 L125 0 L75 16 Z" fill="#ffcc80"/>
+      <path d="M107 -6 L125 0 L107 6 Z" fill="#37474f"/>
+    </g>
+  </g>
+</svg>

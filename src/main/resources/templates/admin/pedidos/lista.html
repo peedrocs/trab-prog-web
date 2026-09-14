@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos :: head('Pedidos')}"></head>
+<body>
+<header th:replace="~{fragmentos :: cabecalho('admin')}"></header>
+<main id="conteudo" class="container">
+    <nav th:replace="~{fragmentos :: menuAdmin('pedidos')}"></nav>
+    <div th:replace="~{fragmentos :: mensagens}"></div>
+
+    <h1>Pedidos</h1>
+
+    <form class="filtros" method="get" th:action="@{/admin/pedidos}" role="search" aria-label="Filtrar pedidos">
+        <div class="campo">
+            <label for="status">Status</label>
+            <select id="status" name="status">
+                <option value="">Todos os status</option>
+                <option th:each="status : ${listaStatus}" th:value="${status}" th:text="${status.descricao}"
+                        th:selected="${status == statusSelecionado}">Pago</option>
+            </select>
+        </div>
+        <button type="submit" class="botao">Filtrar</button>
+    </form>
+
+    <p class="vazio" th:if="${#lists.isEmpty(pedidos)}">Nenhum pedido encontrado.</p>
+
+    <div class="tabela-container" th:unless="${#lists.isEmpty(pedidos)}">
+        <table class="tabela">
+            <caption class="visualmente-oculto">Pedidos da loja</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Pedido</th>
+                    <th scope="col">Cliente</th>
+                    <th scope="col">Data</th>
+                    <th scope="col">Status</th>
+                    <th scope="col" class="numero">Total</th>
+                    <th scope="col">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="pedido : ${pedidos}">
+                    <td th:text="|#${pedido.id}|">#1</td>
+                    <td>
+                        <span th:text="${pedido.usuario.nome}">Maria Souza</span><br>
+                        <span class="texto-suave" th:text="${pedido.usuario.email}">maria@email.com</span>
+                    </td>
+                    <td th:text="${#temporals.format(pedido.dataCriacao, 'dd/MM/yyyy HH:mm')}">01/01/2026 10:00</td>
+                    <td>
+                        <span class="selo" th:classappend="|status-${pedido.status}|" th:text="${pedido.status.descricao}">Pago</span>
+                    </td>
+                    <td class="numero" th:text="${#numbers.formatCurrency(pedido.total)}">R$ 0,00</td>
+                    <td>
+                        <a class="botao botao-secundario botao-pequeno"
+                           th:href="@{/admin/pedidos/{id}(id=${pedido.id})}"
+                           th:aria-label="|Gerenciar pedido ${pedido.id}|">Gerenciar</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+<footer th:replace="~{fragmentos :: rodape}"></footer>
+</body>
+</html>

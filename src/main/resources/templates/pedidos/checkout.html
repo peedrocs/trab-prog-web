@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos :: head('Confirmar pedido')}"></head>
+<body>
+<header th:replace="~{fragmentos :: cabecalho('carrinho')}"></header>
+<main id="conteudo" class="container">
+    <div th:replace="~{fragmentos :: mensagens}"></div>
+
+    <h1>Confirmar pedido</h1>
+
+    <div th:replace="~{fragmentos :: itensPedido(${pedido})}"></div>
+
+    <section class="resumo" aria-labelledby="titulo-resumo">
+        <h2 id="titulo-resumo">Resumo do pedido</h2>
+        <dl th:replace="~{fragmentos :: resumoPedido(${pedido})}"></dl>
+
+        <p class="dica" id="aviso-confirmacao">Após a confirmação o pedido fica como Aguardando pagamento e o estoque é reservado.</p>
+
+        <form th:action="@{/pedidos/finalizar}" method="post">
+            <input type="hidden" name="cupom" th:if="${pedido.cupom != null}" th:value="${pedido.cupom.codigo}">
+            <div class="acoes-formulario">
+                <button type="submit" class="botao" aria-describedby="aviso-confirmacao">Confirmar pedido</button>
+                <a th:href="@{/carrinho}" class="botao botao-secundario">Voltar ao carrinho</a>
+            </div>
+        </form>
+    </section>
+</main>
+<footer th:replace="~{fragmentos :: rodape}"></footer>
+</body>
+</html>

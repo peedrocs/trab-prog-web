@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos :: head('Meus pedidos')}"></head>
+<body>
+<header th:replace="~{fragmentos :: cabecalho('pedidos')}"></header>
+<main id="conteudo" class="container">
+    <div th:replace="~{fragmentos :: mensagens}"></div>
+
+    <h1>Meus pedidos</h1>
+
+    <p class="vazio" th:if="${#lists.isEmpty(pedidos)}">
+        Você ainda não fez nenhum pedido.
+        <a th:href="@{/}">Ir para o catálogo</a>
+    </p>
+
+    <div class="tabela-container" th:unless="${#lists.isEmpty(pedidos)}">
+        <table class="tabela">
+            <caption class="visualmente-oculto">Lista dos seus pedidos</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Pedido</th>
+                    <th scope="col">Data</th>
+                    <th scope="col">Status</th>
+                    <th scope="col" class="numero">Total</th>
+                    <th scope="col">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="pedido : ${pedidos}">
+                    <td th:text="|#${pedido.id}|"></td>
+                    <td th:text="${#temporals.format(pedido.dataCriacao, 'dd/MM/yyyy HH:mm')}"></td>
+                    <td>
+                        <span class="selo" th:classappend="|status-${pedido.status}|" th:text="${pedido.status.descricao}"></span>
+                    </td>
+                    <td class="numero" th:text="${#numbers.formatCurrency(pedido.total)}"></td>
+                    <td>
+                        <a th:href="@{/pedidos/{id}(id=${pedido.id})}" th:aria-label="|Ver detalhes do pedido ${pedido.id}|">Ver detalhes</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+<footer th:replace="~{fragmentos :: rodape}"></footer>
+</body>
+</html>

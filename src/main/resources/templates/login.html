@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos :: head('Entrar')}"></head>
+<body>
+<header th:replace="~{fragmentos :: cabecalho('login')}"></header>
+<main id="conteudo" class="container">
+    <section class="formulario formulario-centralizado">
+        <h1>Entrar</h1>
+        <div th:replace="~{fragmentos :: mensagens}"></div>
+        <p class="alerta alerta-erro" role="alert" th:if="${param.error}">E-mail ou senha inválidos.</p>
+        <p class="alerta alerta-sucesso" role="status" th:if="${param.logout}">Você saiu da sua conta.</p>
+        <p class="alerta alerta-erro" role="alert" th:if="${param.expirou}">Sua sessão foi encerrada porque sua conta foi alterada. Entre novamente.</p>
+
+        <form th:action="@{/login}" method="post">
+            <div class="campo">
+                <label for="email">E-mail</label>
+                <input type="email" id="email" name="email" autocomplete="username" required>
+            </div>
+            <div class="campo">
+                <label for="senha">Senha</label>
+                <input type="password" id="senha" name="senha" autocomplete="current-password" required>
+            </div>
+            <div class="acoes-formulario">
+                <button type="submit" class="botao">Entrar</button>
+            </div>
+        </form>
+
+        <p>Não tem conta? <a th:href="@{/cadastro}">Cadastre-se</a></p>
+    </section>
+</main>
+<footer th:replace="~{fragmentos :: rodape}"></footer>
+</body>
+</html>

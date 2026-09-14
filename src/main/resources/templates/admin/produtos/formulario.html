@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos :: head(${produto.id == null} ? 'Novo produto' : 'Editar produto')}"></head>
+<body>
+<header th:replace="~{fragmentos :: cabecalho('admin')}"></header>
+<main id="conteudo" class="container">
+    <nav th:replace="~{fragmentos :: menuAdmin('produtos')}"></nav>
+    <div th:replace="~{fragmentos :: mensagens}"></div>
+
+    <h1 th:text="${produto.id == null} ? 'Novo produto' : 'Editar produto'">Novo produto</h1>
+
+    <form class="formulario" method="post" th:action="@{/admin/produtos/salvar}" th:object="${produto}">
+        <input type="hidden" th:field="*{id}">
+
+        <div class="campo">
+            <label for="nome">Nome</label>
+            <input type="text" th:field="*{nome}" required maxlength="100"
+                   th:aria-invalid="${#fields.hasErrors('nome')}"
+                   th:aria-describedby="${#fields.hasErrors('nome')} ? 'nome-erro'">
+            <p class="erro-campo" id="nome-erro" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></p>
+        </div>
+
+        <div class="campo">
+            <label for="descricao">Descrição (opcional)</label>
+            <textarea th:field="*{descricao}" rows="4" maxlength="1000"
+                      th:aria-invalid="${#fields.hasErrors('descricao')}"
+                      th:aria-describedby="${#fields.hasErrors('descricao')} ? 'descricao-erro'"></textarea>
+            <p class="erro-campo" id="descricao-erro" th:if="${#fields.hasErrors('descricao')}" th:errors="*{descricao}"></p>
+        </div>
+
+        <div class="campo">
+            <label for="preco">Preço (R$)</label>
+            <input type="number" th:field="*{preco}" step="0.01" min="0.01" required
+                   th:aria-invalid="${#fields.hasErrors('preco')}"
+                   th:aria-describedby="${#fields.hasErrors('preco')} ? 'preco-erro'">
+            <p class="erro-campo" id="preco-erro" th:if="${#fields.hasErrors('preco')}" th:errors="*{preco}"></p>
+        </div>
+
+        <div class="campo">
+            <label for="estoque">Estoque</label>
+            <input type="number" th:field="*{estoque}" min="0" step="1" required
+                   th:aria-invalid="${#fields.hasErrors('estoque')}"
+                   th:aria-describedby="${#fields.hasErrors('estoque')} ? 'estoque-erro'">
+            <p class="erro-campo" id="estoque-erro" th:if="${#fields.hasErrors('estoque')}" th:errors="*{estoque}"></p>
+        </div>
+
+        <div class="campo">
+            <label for="categoria">Categoria</label>
+            <select th:field="*{categoria}" required
+                    th:aria-invalid="${#fields.hasErrors('categoria')}"
+                    th:aria-describedby="${#fields.hasErrors('categoria')} ? 'categoria-erro'">
+                <option value="">Selecione uma categoria</option>
+                <option th:each="categoria : ${categorias}" th:value="${categoria.id}" th:text="${categoria.nome}">Canetas</option>
+            </select>
+            <p class="erro-campo" id="categoria-erro" th:if="${#fields.hasErrors('categoria')}" th:errors="*{categoria}"></p>
+        </div>
+
+        <div class="campo">
+            <label for="imagemUrl">URL da imagem (opcional)</label>
+            <input type="text" th:field="*{imagemUrl}" maxlength="255"
+                   th:aria-invalid="${#fields.hasErrors('imagemUrl')}"
+                   th:aria-describedby="${#fields.hasErrors('imagemUrl')} ? 'imagemUrl-dica imagemUrl-erro' : 'imagemUrl-dica'">
+            <p class="dica" id="imagemUrl-dica">Ex.: /imagens/caneta.svg ou um endereço https://</p>
+            <p class="erro-campo" id="imagemUrl-erro" th:if="${#fields.hasErrors('imagemUrl')}" th:errors="*{imagemUrl}"></p>
+        </div>
+
+        <div class="acoes-formulario">
+            <button type="submit" class="botao">Salvar</button>
+            <a class="botao botao-secundario" th:href="@{/admin/produtos}">Cancelar</a>
+        </div>
+    </form>
+</main>
+<footer th:replace="~{fragmentos :: rodape}"></footer>
+</body>
+</html>

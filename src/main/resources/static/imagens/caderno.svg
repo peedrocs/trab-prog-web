@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <rect width="400" height="300" fill="#fff9c4"/>
+  <g stroke="#263238" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+    <rect x="128" y="52" width="170" height="210" rx="10" fill="#ffffff"/>
+    <rect x="115" y="42" width="170" height="210" rx="10" fill="#26a69a"/>
+    <rect x="255" y="42" width="14" height="210" fill="#ef5350"/>
+    <rect x="150" y="80" width="90" height="50" rx="6" fill="#ffffff"/>
+    <path d="M164 100 H226 M164 116 H210" stroke="#90a4ae" stroke-width="5" fill="none"/>
+    <polygon points="195,169 201,186 220,187 206,198 210,216 195,206 180,216 184,198 170,187 189,186" fill="#ffca28"/>
+    <rect x="100" y="54" width="34" height="10" rx="5" fill="#cfd8dc"/>
+    <rect x="100" y="76" width="34" height="10" rx="5" fill="#cfd8dc"/>
+    <rect x="100" y="98" width="34" height="10" rx="5" fill="#cfd8dc"/>
+    <rect x="100" y="120" width="34" height="10" rx="5" fill="#cfd8dc"/>
+    <rect x="100" y="142" width="34" height="10" rx="5" fill="#cfd8dc"/>
+    <rect x="100" y="164" width="34" height="10" rx="5" fill="#cfd8dc"/>
+    <rect x="100" y="186" width="34" height="10" rx="5" fill="#cfd8dc"/>
+    <rect x="100" y="208" width="34" height="10" rx="5" fill="#cfd8dc"/>
+    <rect x="100" y="230" width="34" height="10" rx="5" fill="#cfd8dc"/>
+  </g>
+</svg>

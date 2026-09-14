@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos :: head('Criar conta')}"></head>
+<body>
+<header th:replace="~{fragmentos :: cabecalho('cadastro')}"></header>
+<main id="conteudo" class="container">
+    <section class="formulario formulario-centralizado">
+        <h1>Criar conta</h1>
+        <div th:replace="~{fragmentos :: mensagens}"></div>
+
+        <form th:action="@{/cadastro}" th:object="${usuario}" method="post">
+            <div class="campo">
+                <label for="nome">Nome</label>
+                <input type="text" th:field="*{nome}" required maxlength="100" autocomplete="name"
+                       th:aria-invalid="${#fields.hasErrors('nome')}"
+                       th:aria-describedby="${#fields.hasErrors('nome')} ? 'nome-erro'">
+                <p class="erro-campo" id="nome-erro" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></p>
+            </div>
+
+            <div class="campo">
+                <label for="email">E-mail</label>
+                <input type="email" th:field="*{email}" required autocomplete="email"
+                       th:aria-invalid="${#fields.hasErrors('email')}"
+                       th:aria-describedby="${#fields.hasErrors('email')} ? 'email-erro'">
+                <p class="erro-campo" id="email-erro" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+            </div>
+
+            <div class="campo">
+                <label for="senha">Senha</label>
+                <input type="password" id="senha" name="senha" required minlength="6" maxlength="72" autocomplete="new-password"
+                       th:aria-invalid="${#fields.hasErrors('senha')}"
+                       th:aria-describedby="${#fields.hasErrors('senha')} ? 'senha-dica senha-erro' : 'senha-dica'">
+                <p class="dica" id="senha-dica">De 6 a 72 caracteres</p>
+                <p class="erro-campo" id="senha-erro" th:if="${#fields.hasErrors('senha')}" th:errors="*{senha}"></p>
+            </div>
+
+            <div class="campo">
+                <label for="cpf">CPF (opcional)</label>
+                <input type="text" th:field="*{cpf}" inputmode="numeric" maxlength="14"
+                       th:aria-invalid="${#fields.hasErrors('cpf')}"
+                       th:aria-describedby="${#fields.hasErrors('cpf')} ? 'cpf-dica cpf-erro' : 'cpf-dica'">
+                <p class="dica" id="cpf-dica">Somente números ou no formato 000.000.000-00</p>
+                <p class="erro-campo" id="cpf-erro" th:if="${#fields.hasErrors('cpf')}" th:errors="*{cpf}"></p>
+            </div>
+
+            <div class="acoes-formulario">
+                <button type="submit" class="botao">Criar conta</button>
+            </div>
+        </form>
+
+        <p>Já tem conta? <a th:href="@{/login}">Entrar</a></p>
+    </section>
+</main>
+<footer th:replace="~{fragmentos :: rodape}"></footer>
+</body>
+</html>

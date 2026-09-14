@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragmentos :: head(${produto.nome})}"></head>
+<body>
+<header th:replace="~{fragmentos :: cabecalho('catalogo')}"></header>
+<main id="conteudo" class="container">
+    <div th:replace="~{fragmentos :: mensagens}"></div>
+
+    <p><a th:href="@{/}">Voltar ao catálogo</a></p>
+
+    <section class="detalhe-produto" aria-labelledby="nome-produto">
+        <img th:src="@{${produto.imagem}}" th:alt="${produto.nome}">
+        <div>
+            <p class="categoria-produto" th:text="${produto.categoria.nome}">Categoria</p>
+            <h1 id="nome-produto" th:text="${produto.nome}">Nome do produto</h1>
+            <p class="preco" th:text="${#numbers.formatCurrency(produto.preco)}">R$ 0,00</p>
+            <p>
+                <span class="selo selo-disponivel" th:if="${produto.disponivel}">Em estoque</span>
+                <span class="selo selo-indisponivel" th:unless="${produto.disponivel}">Indisponível</span>
+                <span class="texto-suave" th:if="${produto.disponivel}"
+                      th:text="${produto.estoque == 1} ? '(1 unidade)' : |(${produto.estoque} unidades)|">(10 unidades)</span>
+            </p>
+            <p th:unless="${#strings.isEmpty(produto.descricao)}" th:text="${produto.descricao}">Descrição do produto</p>
+
+            <form class="form-carrinho" th:if="${produto.disponivel}" th:action="@{/carrinho/adicionar}" method="post">
+                <input type="hidden" name="produtoId" th:value="${produto.id}">
+                <div class="campo">
+                    <label for="quantidade">Quantidade</label>
+                    <input type="number" id="quantidade" name="quantidade" min="1" th:max="${produto.estoque}" value="1" required>
+                </div>
+                <button type="submit" class="botao">Adicionar ao carrinho</button>
+            </form>
+
+            <th:block th:unless="${produto.disponivel}">
+                <button class="botao" type="button" disabled>Indisponível</button>
+                <p class="texto-suave">Este produto está sem estoque no momento. Confira outros itens do catálogo.</p>
+            </th:block>
+        </div>
+    </section>
+
+    <section aria-labelledby="titulo-avaliacoes">
+        <h2 id="titulo-avaliacoes">Avaliações</h2>
+
+        <p th:unless="${#lists.isEmpty(avaliacoes)}">
+            Nota média: <strong th:text="${#numbers.formatDecimal(media, 1, 1)}">4,5</strong> de 5
+            (<span th:text="${#lists.size(avaliacoes) == 1} ? '1 avaliação' : |${#lists.size(avaliacoes)} avaliações|">2 avaliações</span>)
+        </p>
+
+        <form class="formulario" th:if="${podeAvaliar}" th:action="@{/avaliacoes}" method="post"
+              aria-labelledby="titulo-avaliar">
+            <h3 id="titulo-avaliar">Avaliar produto</h3>
+            <input type="hidden" name="produtoId" th:value="${produto.id}">
+            <div class="campo">
+                <label for="nota">Nota</label>
+                <select id="nota" name="nota" required>
+                    <option value="5">5 - Excelente</option>
+                    <option value="4">4 - Muito bom</option>
+                    <option value="3">3 - Bom</option>
+                    <option value="2">2 - Regular</option>
+                    <option value="1">1 - Ruim</option>
+                </select>
+            </div>
+            <div class="campo">
+                <label for="comentario">Comentário (opcional)</label>
+                <textarea id="comentario" name="comentario" rows="4" maxlength="500"
+                          aria-describedby="comentario-dica"></textarea>
+                <p class="dica" id="comentario-dica">Máximo de 500 caracteres.</p>
+            </div>
+            <div class="acoes-formulario">
+                <button type="submit" class="botao">Enviar avaliação</button>
+            </div>
+        </form>
+
+        <th:block th:unless="${podeAvaliar}">
+            <p class="texto-suave" sec:authorize="isAuthenticated()">
+                Somente clientes que compraram este produto podem avaliá-lo, uma vez por produto.
+            </p>
+            <p class="texto-suave" sec:authorize="isAnonymous()">
+                Para avaliar este produto, <a th:href="@{/login}">entre na sua conta</a>.
+                Somente clientes que compraram o produto podem avaliá-lo.
+            </p>
+        </th:block>
+
+        <th:block th:unless="${#lists.isEmpty(avaliacoes)}">
+            <h3>Opiniões dos clientes</h3>
+            <ul class="lista-avaliacoes">
+                <li class="avaliacao" th:each="avaliacao : ${avaliacoes}">
+                    <p><strong th:text="${avaliacao.usuario.nome}">Nome do cliente</strong></p>
+                    <p>
+                        <span class="estrelas" aria-hidden="true"
+                              th:text="${#strings.repeat('★', avaliacao.nota) + #strings.repeat('☆', 5 - avaliacao.nota)}">★★★★★</span>
+                        <span class="visualmente-oculto" th:text="|Nota ${avaliacao.nota} de 5|">Nota 5 de 5</span>
+                    </p>
+                    <p th:unless="${#strings.isEmpty(avaliacao.comentario)}" th:text="${avaliacao.comentario}">Comentário</p>
+                    <p class="texto-suave">
+                        Avaliado em <span th:text="${#temporals.format(avaliacao.dataCriacao, 'dd/MM/yyyy HH:mm')}">01/01/2026 10:00</span>
+                    </p>
+                </li>
+            </ul>
+        </th:block>
+
+        <p class="vazio" th:if="${#lists.isEmpty(avaliacoes)}">Este produto ainda não tem avaliações.</p>
+    </section>
+</main>
+<footer th:replace="~{fragmentos :: rodape}"></footer>
+</body>
+</html>
