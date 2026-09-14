@@ -39,3 +39,4 @@ application-local.properties
 slides/
 docs/imagens/*
 !docs/imagens/diagrama-casos-de-uso.png
+docs/6-apresentacao.md
