@@ -12,5 +12,4 @@ Disciplina: Programação Web - UFMS
 | Lucas dos Reis Schweich | Segurança e acessibilidade |
 | Pedro Cavalcante Sanches | Área administrativa e diferenciais |
 
-A divisão das falas é uma sugestão e pode ser trocada entre o grupo. O roteiro de cada parte está
-em [docs/6-apresentacao.md](docs/6-apresentacao.md).
+A divisão das falas é uma sugestão e pode ser trocada entre o grupo.

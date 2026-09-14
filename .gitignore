@@ -35,3 +35,7 @@ build/
 ### Config local (não versionar credenciais individuais) ###
 application-local.properties
 .env
+### Materiais de apresentação (não versionados) ###
+slides/
+docs/imagens/*
+!docs/imagens/diagrama-casos-de-uso.png

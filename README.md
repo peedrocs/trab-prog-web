@@ -10,8 +10,6 @@ Loja online de papelaria feita com Spring Boot (Spring MVC + Thymeleaf), Spring 
 - [3. Arquitetura do projeto](docs/3-arquitetura.md)
 - [4. Segurança e acessibilidade](docs/4-seguranca-e-acessibilidade.md)
 - [5. Diferenciais](docs/5-diferenciais.md)
-- [6. Guia da apresentação](docs/6-apresentacao.md)
-- Slides: [slides/apresentacao-papelaria.pptx](slides/apresentacao-papelaria.pptx)
 
 ## Tecnologias
 
