@@ -12,4 +12,3 @@ Disciplina: Programação Web - UFMS
 | Lucas dos Reis Schweich | Segurança e acessibilidade |
 | Pedro Cavalcante Sanches | Área administrativa e diferenciais |
 
-A divisão das falas é uma sugestão e pode ser trocada entre o grupo.
