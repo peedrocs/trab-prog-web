@@ -75,8 +75,9 @@ src/main/resources
 
 Os enums `Perfil`, `StatusPedido` e `TipoDesconto` são salvos como texto nas tabelas.
 
-`ItemCarrinho` fica só na memória: o carrinho vive na sessão do navegador (`@SessionScope`) e só
-vira `ItemPedido` quando o cliente confirma a compra.
+`ItemCarrinho` fica só na memória: o `CarrinhoService` é anotado com `@SessionScope`, então
+cada sessão HTTP tem o seu carrinho guardado no servidor (o navegador guarda apenas o cookie
+da sessão). O item só vira `ItemPedido` quando o cliente confirma a compra.
 
 ## Exemplo de caminho completo
 

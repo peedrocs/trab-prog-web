@@ -73,7 +73,7 @@ Nenhuma informação depende só da cor: o status do pedido, o estoque e a situa
 sempre escritos por extenso.
 
 ### Tags semânticas
-As páginas usam `header`, `nav`, `main`, `section`, `article`, `aside` e `footer`, com um único
+As páginas usam `header`, `nav`, `main`, `section`, `article` e `footer`, com um único
 `h1` por página e títulos em ordem (`h1`, depois `h2`, depois `h3`). As tabelas têm `caption` e
 `th scope="col"`.
 
