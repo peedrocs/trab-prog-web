@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos :: head('Excluir categoria')}"></head>
+<body>
+<header th:replace="~{fragmentos :: cabecalho('admin')}"></header>
+<main id="conteudo" class="container">
+    <nav th:replace="~{fragmentos :: menuAdmin('categorias')}"></nav>
+
+    <section class="formulario">
+        <h1>Excluir categoria</h1>
+        <p>Deseja excluir a categoria <strong th:text="${categoria.nome}">Categoria</strong>? Esta ação não pode ser desfeita.</p>
+        <p class="dica">Categoria que tem produtos não pode ser excluída.</p>
+        <form th:action="@{/admin/categorias/{id}/excluir(id=${categoria.id})}" method="post">
+            <div class="acoes-formulario">
+                <button type="submit" class="botao botao-perigo">Excluir</button>
+                <a class="botao botao-secundario" th:href="@{/admin/categorias}">Cancelar</a>
+            </div>
+        </form>
+    </section>
+</main>
+<footer th:replace="~{fragmentos :: rodape}"></footer>
+</body>
+</html>

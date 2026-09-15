@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragmentos :: head('Administração')}"></head>
+<head th:replace="~{fragmentos :: head('Painel administrativo')}"></head>
 <body>
 <header th:replace="~{fragmentos :: cabecalho('admin')}"></header>
 <main id="conteudo" class="container">
-    <h1>Administração</h1>
+    <nav th:replace="~{fragmentos :: menuAdmin('painel')}"></nav>
+    <div th:replace="~{fragmentos :: mensagens}"></div>
+
+    <h1>Painel administrativo</h1>
 
     <ul class="painel-cards">
         <li class="card-numero">
@@ -16,8 +19,8 @@
             Categorias cadastradas
         </li>
         <li class="card-numero">
-            <strong th:text="${totalPedidos}">0</strong>
-            Pedidos registrados
+            <strong th:text="${pedidosAguardando}">0</strong>
+            Pedidos aguardando pagamento
         </li>
         <li class="card-numero">
             <strong th:text="${totalUsuarios}">0</strong>
@@ -26,8 +29,12 @@
     </ul>
 
     <section>
-        <h2>Cadastros previstos</h2>
-        <p>Esta área receberá os cadastros de produtos, categorias, pedidos e usuários na próxima etapa.</p>
+        <h2>Atalhos</h2>
+        <div class="acoes">
+            <a class="botao" th:href="@{/admin/produtos/novo}">Novo produto</a>
+            <a class="botao" th:href="@{/admin/produtos}">Gerenciar produtos</a>
+            <a class="botao" th:href="@{/admin/pedidos}">Gerenciar pedidos</a>
+        </div>
     </section>
 </main>
 <footer th:replace="~{fragmentos :: rodape}"></footer>

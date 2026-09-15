@@ -26,7 +26,7 @@ partir das entidades (`spring.jpa.hibernate.ddl-auto=update`).
 Navegador
    |
    v
-Controller   recebe a requisição, busca os dados e escolhe a página
+Controller   recebe a requisição, busca ou grava os dados e escolhe a página
    |
    v
 Repository   interfaces do Spring Data JPA que conversam com o banco
@@ -38,9 +38,9 @@ Model        entidades JPA que viram tabelas no MySQL
 As views ficam em `templates/`, escritas em Thymeleaf, e recebem os dados que o controller
 colocou no `Model`.
 
-Nesta etapa o controller chama o repository direto, porque ainda não há regras de negócio no
-código. Quando as regras forem implementadas, entra a camada service entre o controller e o
-repository.
+Nesta etapa o controller chama o repository direto. Quando as regras de negócio forem
+implementadas (baixa de estoque, frete, cupom, validações), entra a camada service entre o
+controller e o repository.
 
 ## Pastas
 
@@ -51,22 +51,37 @@ src/main/java/com/mgp/lojaonline
 │   ├── SecurityConfig.java      quem pode acessar o quê, login e BCrypt
 │   └── DadosIniciais.java       cadastra dados de exemplo na primeira execução
 ├── controller
-│   ├── CatalogoController.java  GET /        lista os produtos
-│   ├── LoginController.java     GET /login   abre a tela de login
-│   └── AdminController.java     GET /admin   painel do administrador
+│   ├── CatalogoController.java       GET /  e  GET /produtos/{id}
+│   ├── CarrinhoController.java       /carrinho: ver, adicionar, atualizar e remover
+│   ├── PedidoController.java         /pedidos: meus pedidos, detalhe e finalizar compra
+│   ├── AutenticacaoController.java   /login e /cadastro
+│   └── admin
+│       ├── PainelAdminController.java     GET /admin
+│       ├── ProdutoAdminController.java    /admin/produtos: listar, cadastrar, editar e excluir
+│       ├── CategoriaAdminController.java  /admin/categorias: listar, cadastrar, editar e excluir
+│       ├── PedidoAdminController.java     /admin/pedidos: listar, ver e mudar o status
+│       └── UsuarioAdminController.java    /admin/usuarios: listar e mudar o perfil
 ├── model
-│   ├── Usuario.java, Categoria.java, Produto.java, Pedido.java, ItemPedido.java
-│   └── Perfil.java, StatusPedido.java   enums
+│   ├── Usuario.java, Categoria.java, Produto.java, Pedido.java, ItemPedido.java   entidades
+│   ├── Perfil.java, StatusPedido.java   enums
+│   └── ItemCarrinho.java                item do carrinho em sessão, não vira tabela
 └── repository
     └── UsuarioRepository, CategoriaRepository, ProdutoRepository, PedidoRepository
 
 src/main/resources
 ├── templates
-│   ├── fragmentos.html   cabeçalho, menu e rodapé reaproveitados
-│   ├── index.html        catálogo
-│   ├── login.html        login
-│   ├── error.html        páginas de erro (403, 404 e 500)
-│   └── admin/painel.html painel do administrador
+│   ├── fragmentos.html      cabeçalho, menu, mensagens, menu da administração e rodapé
+│   ├── index.html           catálogo
+│   ├── produtos/detalhe.html
+│   ├── carrinho.html
+│   ├── login.html e cadastro.html
+│   ├── pedidos/lista.html e pedidos/detalhe.html
+│   ├── admin/painel.html
+│   ├── admin/produtos/     lista.html, formulario.html e excluir.html
+│   ├── admin/categorias/   lista.html, formulario.html e excluir.html
+│   ├── admin/pedidos/      lista.html e detalhe.html
+│   ├── admin/usuarios/     lista.html
+│   └── error.html           páginas de erro (403, 404 e 500)
 ├── static
 │   ├── css/estilo.css
 │   ├── js/script.js
@@ -74,7 +89,7 @@ src/main/resources
 └── application.properties   banco, Thymeleaf e idioma
 
 docs
-├── telas                       imagens das telas planejadas (design no Canva)
+├── telas                       imagens das telas (design no Canva)
 ├── diagrama-casos-de-uso.asta  diagrama no Astah
 └── imagens/diagrama-casos-de-uso.png
 ```
@@ -92,12 +107,18 @@ docs
 Os enums `Perfil` (USER e ADMIN) e `StatusPedido` são salvos pelo nome do valor
 (`EnumType.STRING`), e não pelo número.
 
+O carrinho não vira tabela: é um mapa produto e quantidade guardado na sessão HTTP
+(`CarrinhoController.carrinho`). Ele só vira `Pedido` e `ItemPedido` quando o cliente clica em
+Finalizar compra.
+
 ## Exemplo de caminho completo
 
-Quando alguém abre a página inicial:
+Quando o cliente clica em Adicionar ao carrinho:
 
-1. O Spring MVC chama `CatalogoController.catalogo()`, mapeado em `GET /`.
-2. O controller pede os produtos ao `ProdutoRepository` (`findAllByOrderByNomeAsc()`).
-3. O Spring Data JPA monta o SQL e o MySQL devolve as linhas, que viram objetos `Produto`.
-4. O controller coloca a lista no `Model` e devolve o nome da página, `index`.
-5. O Thymeleaf monta o `index.html` com um cartão para cada produto.
+1. O formulário envia `POST /carrinho/adicionar` com o id do produto e a quantidade.
+2. `CarrinhoController.adicionar()` soma a quantidade no mapa do carrinho da sessão e redireciona
+   para `/carrinho`.
+3. `CarrinhoController.carrinho()` busca cada produto do mapa no `ProdutoRepository`, monta a
+   lista de `ItemCarrinho` com os subtotais e calcula o total.
+4. O controller coloca a lista e o total no `Model` e devolve o nome da página, `carrinho`.
+5. O Thymeleaf monta o `carrinho.html` com uma linha para cada item.

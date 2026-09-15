@@ -24,8 +24,9 @@ edita e exclui cadastros.
 
 ## Regras de negócio
 
-As regras abaixo serão implementadas na próxima etapa. Nesta entrega elas orientam o modelo de
-dados e as telas planejadas.
+Parte das regras já está no esqueleto (e-mail único, senha com BCrypt, quem se cadastra vira
+`ROLE_USER`, pedido cancelado não muda e as exclusões protegidas). As demais serão implementadas
+na próxima etapa, em uma camada de service.
 
 ### Catálogo
 - Todo produto tem categoria, nome, preço e estoque. A descrição e a imagem são opcionais; sem

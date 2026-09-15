@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos :: head('Usuários')}"></head>
+<body>
+<header th:replace="~{fragmentos :: cabecalho('admin')}"></header>
+<main id="conteudo" class="container">
+    <nav th:replace="~{fragmentos :: menuAdmin('usuarios')}"></nav>
+    <div th:replace="~{fragmentos :: mensagens}"></div>
+
+    <h1>Usuários</h1>
+
+    <div class="tabela-container">
+        <table class="tabela">
+            <caption class="visualmente-oculto">Usuários cadastrados</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Nome</th>
+                    <th scope="col">E-mail</th>
+                    <th scope="col">Perfil</th>
+                    <th scope="col">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="usuario : ${usuarios}">
+                    <td th:text="${usuario.nome}">Nome</td>
+                    <td th:text="${usuario.email}">email</td>
+                    <td th:text="${usuario.perfil.name() == 'ADMIN'} ? 'Administrador' : 'Cliente'">Cliente</td>
+                    <td>
+                        <form th:action="@{/admin/usuarios/{id}/perfil(id=${usuario.id})}" method="post">
+                            <button type="submit" class="botao botao-secundario botao-pequeno"
+                                    th:text="${usuario.perfil.name() == 'ADMIN'} ? 'Tornar cliente' : 'Tornar administrador'"
+                                    th:aria-label="|Alterar perfil de ${usuario.nome}|">Alterar perfil</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+<footer th:replace="~{fragmentos :: rodape}"></footer>
+</body>
+</html>

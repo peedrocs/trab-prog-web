@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos :: head(${produto.nome})}"></head>
+<body>
+<header th:replace="~{fragmentos :: cabecalho('catalogo')}"></header>
+<main id="conteudo" class="container">
+    <div th:replace="~{fragmentos :: mensagens}"></div>
+
+    <p><a th:href="@{/}">Voltar ao catálogo</a></p>
+
+    <section class="detalhe-produto" aria-labelledby="nome-produto">
+        <img th:src="@{${produto.imagemUrl ?: '/imagens/sem-imagem.svg'}}" th:alt="${produto.nome}">
+        <div>
+            <p class="categoria-produto" th:text="${produto.categoria.nome}">Categoria</p>
+            <h1 id="nome-produto" th:text="${produto.nome}">Nome do produto</h1>
+            <p class="preco" th:text="${#numbers.formatCurrency(produto.preco)}">R$ 0,00</p>
+            <p>
+                <span class="selo selo-disponivel" th:if="${produto.estoque > 0}">Em estoque</span>
+                <span class="selo selo-indisponivel" th:unless="${produto.estoque > 0}">Indisponível</span>
+                <span class="texto-suave" th:if="${produto.estoque > 0}"
+                      th:text="${produto.estoque == 1} ? '(1 unidade)' : |(${produto.estoque} unidades)|">(10 unidades)</span>
+            </p>
+            <p th:unless="${#strings.isEmpty(produto.descricao)}" th:text="${produto.descricao}">Descrição do produto</p>
+
+            <form class="form-carrinho" th:if="${produto.estoque > 0}" th:action="@{/carrinho/adicionar}" method="post">
+                <input type="hidden" name="produtoId" th:value="${produto.id}">
+                <div class="campo">
+                    <label for="quantidade">Quantidade</label>
+                    <input type="number" id="quantidade" name="quantidade" min="1" th:max="${produto.estoque}" value="1" required>
+                </div>
+                <button type="submit" class="botao">Adicionar ao carrinho</button>
+            </form>
+
+            <th:block th:unless="${produto.estoque > 0}">
+                <button class="botao" type="button" disabled>Indisponível</button>
+                <p class="texto-suave">Este produto está sem estoque no momento.</p>
+            </th:block>
+        </div>
+    </section>
+</main>
+<footer th:replace="~{fragmentos :: rodape}"></footer>
+</body>
+</html>

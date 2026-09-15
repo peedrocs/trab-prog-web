@@ -6,6 +6,7 @@
 <main id="conteudo" class="container">
     <section class="formulario formulario-centralizado">
         <h1>Entrar</h1>
+        <div th:replace="~{fragmentos :: mensagens}"></div>
         <p class="alerta alerta-erro" role="alert" th:if="${param.error}">E-mail ou senha inválidos.</p>
         <p class="alerta alerta-sucesso" role="status" th:if="${param.logout}">Você saiu da sua conta.</p>
 
@@ -22,6 +23,8 @@
                 <button type="submit" class="botao">Entrar</button>
             </div>
         </form>
+
+        <p>Não tem conta? <a th:href="@{/cadastro}">Cadastre-se</a></p>
     </section>
 </main>
 <footer th:replace="~{fragmentos :: rodape}"></footer>

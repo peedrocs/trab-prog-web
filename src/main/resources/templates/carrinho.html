@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragmentos :: head('Carrinho de compras')}"></head>
+<body>
+<header th:replace="~{fragmentos :: cabecalho('carrinho')}"></header>
+<main id="conteudo" class="container">
+    <div th:replace="~{fragmentos :: mensagens}"></div>
+    <h1>Carrinho de compras</h1>
+
+    <p class="vazio" th:if="${#lists.isEmpty(itens)}">
+        Seu carrinho está vazio. <a th:href="@{/}">Ver produtos</a>
+    </p>
+
+    <th:block th:unless="${#lists.isEmpty(itens)}">
+        <div class="tabela-container">
+            <table class="tabela">
+                <caption class="visualmente-oculto">Itens do carrinho</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Produto</th>
+                        <th scope="col" class="numero">Preço unitário</th>
+                        <th scope="col">Quantidade</th>
+                        <th scope="col" class="numero">Subtotal</th>
+                        <th scope="col">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="item : ${itens}">
+                        <td>
+                            <img class="miniatura" alt="" th:src="@{${item.produto.imagemUrl ?: '/imagens/sem-imagem.svg'}}">
+                            <a th:href="@{/produtos/{id}(id=${item.produto.id})}" th:text="${item.produto.nome}">Produto</a>
+                        </td>
+                        <td class="numero" th:text="${#numbers.formatCurrency(item.produto.preco)}">R$ 0,00</td>
+                        <td>
+                            <form class="acoes" th:action="@{/carrinho/atualizar}" method="post">
+                                <input type="hidden" name="produtoId" th:value="${item.produto.id}">
+                                <label class="visualmente-oculto" th:for="|quantidade-${item.produto.id}|"
+                                       th:text="|Quantidade de ${item.produto.nome}|">Quantidade</label>
+                                <input type="number" class="campo-quantidade" name="quantidade" required min="1"
+                                       th:id="|quantidade-${item.produto.id}|" th:value="${item.quantidade}">
+                                <button type="submit" class="botao botao-secundario botao-pequeno"
+                                        th:aria-label="|Atualizar quantidade de ${item.produto.nome}|">Atualizar</button>
+                            </form>
+                        </td>
+                        <td class="numero" th:text="${#numbers.formatCurrency(item.subtotal)}">R$ 0,00</td>
+                        <td>
+                            <form th:action="@{/carrinho/remover}" method="post">
+                                <input type="hidden" name="produtoId" th:value="${item.produto.id}">
+                                <button type="submit" class="botao botao-perigo botao-pequeno"
+                                        th:aria-label="|Remover ${item.produto.nome} do carrinho|">Remover</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <section class="resumo" aria-labelledby="titulo-resumo">
+            <h2 id="titulo-resumo">Resumo</h2>
+            <dl>
+                <dt class="total">Total</dt>
+                <dd class="total" th:text="${#numbers.formatCurrency(total)}">R$ 0,00</dd>
+            </dl>
+            <p class="dica" sec:authorize="isAnonymous()">Entre na sua conta para finalizar a compra.</p>
+            <div class="acoes-formulario" sec:authorize="isAnonymous()">
+                <a class="botao" th:href="@{/login}">Entrar para finalizar</a>
+            </div>
+            <form th:action="@{/pedidos/finalizar}" method="post" sec:authorize="isAuthenticated()">
+                <div class="acoes-formulario">
+                    <button type="submit" class="botao">Finalizar compra</button>
+                </div>
+            </form>
+        </section>
+    </th:block>
+</main>
+<footer th:replace="~{fragmentos :: rodape}"></footer>
+</body>
+</html>

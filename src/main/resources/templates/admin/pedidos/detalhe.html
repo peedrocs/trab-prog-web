@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos :: head(|Pedido #${pedido.id}|)}"></head>
+<body>
+<header th:replace="~{fragmentos :: cabecalho('admin')}"></header>
+<main id="conteudo" class="container">
+    <nav th:replace="~{fragmentos :: menuAdmin('pedidos')}"></nav>
+    <div th:replace="~{fragmentos :: mensagens}"></div>
+
+    <p><a th:href="@{/admin/pedidos}">Voltar aos pedidos</a></p>
+
+    <h1 th:text="|Pedido #${pedido.id}|">Pedido #1</h1>
+    <p>
+        Cliente: <span th:text="${pedido.usuario.nome}">Cliente</span>
+        (<span th:text="${pedido.usuario.email}">cliente@email.com</span>).
+        Feito em <span th:text="${#temporals.format(pedido.data, 'dd/MM/yyyy HH:mm')}">01/01/2026 10:00</span>.
+        Status: <span th:class="|selo status-${pedido.status}|" th:text="${pedido.status.descricao}">Status</span>
+    </p>
+
+    <div th:replace="~{fragmentos :: itensPedido(${pedido})}"></div>
+
+    <section class="resumo" aria-labelledby="titulo-resumo">
+        <h2 id="titulo-resumo">Resumo</h2>
+        <dl>
+            <dt class="total">Total</dt>
+            <dd class="total" th:text="${#numbers.formatCurrency(pedido.total)}">R$ 0,00</dd>
+        </dl>
+
+        <form th:action="@{/admin/pedidos/{id}/status(id=${pedido.id})}" method="post"
+              th:unless="${pedido.status.name() == 'CANCELADO'}">
+            <div class="campo">
+                <label for="status">Novo status</label>
+                <select id="status" name="status">
+                    <option th:each="opcao : ${listaStatus}" th:value="${opcao}" th:text="${opcao.descricao}"
+                            th:selected="${opcao == pedido.status}">Status</option>
+                </select>
+            </div>
+            <div class="acoes-formulario">
+                <button type="submit" class="botao">Alterar status</button>
+            </div>
+        </form>
+        <p class="dica" th:if="${pedido.status.name() == 'CANCELADO'}">Pedido cancelado não muda mais de status.</p>
+    </section>
+</main>
+<footer th:replace="~{fragmentos :: rodape}"></footer>
+</body>
+</html>

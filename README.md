@@ -3,8 +3,8 @@
 Loja online de papelaria feita com Spring Boot (Spring MVC + Thymeleaf), Spring Security e MySQL.
 
 Este repositório contém a entrega do protótipo (esqueleto): o projeto inicializado com as camadas
-da arquitetura, a configuração inicial do Spring Security, o banco de dados real e a documentação
-do tema, das regras de negócio, dos casos de uso e das telas planejadas.
+da arquitetura, a configuração inicial do Spring Security, o banco de dados real, as páginas de
+todas as telas e a documentação do tema, das regras de negócio, dos casos de uso e do design.
 
 ## Documentação
 
@@ -45,28 +45,30 @@ a classe `DadosIniciais` cadastra as categorias, alguns produtos e as contas de 
 
 - Entidades JPA (`Usuario`, `Categoria`, `Produto`, `Pedido` e `ItemPedido`) que viram tabelas no MySQL.
 - Repositories do Spring Data JPA para cada entidade.
-- Controllers do catálogo, do login e do painel administrativo.
-- Páginas Thymeleaf do catálogo, do login, do painel e de erro, com o CSS e o JavaScript do site.
+- Controllers e páginas Thymeleaf de todas as telas: catálogo com busca e filtro, página do
+  produto, carrinho, cadastro, login, pedidos do cliente, painel do administrador, CRUD de
+  produtos e de categorias, pedidos (com troca de status) e usuários.
 - Spring Security com login por formulário, senhas em BCrypt e a área `/admin` restrita ao `ROLE_ADMIN`.
-- Telas planejadas (carrinho, cadastro, pedidos e o CRUD de produtos) desenhadas no Canva, com
-  as imagens em `docs/telas`.
+- Design das telas no Canva, com as imagens em `docs/telas`.
 
-As regras de negócio e os cadastros (CRUD) serão implementados na próxima etapa.
+As regras de negócio (baixa de estoque, frete, cupom, avaliações e validação dos formulários)
+serão implementadas na próxima etapa, em uma camada de service.
 
 ## Estrutura
 
 ```
 src/main/java/com/mgp/lojaonline
 ├── config        SecurityConfig (segurança) e DadosIniciais (dados de exemplo)
-├── controller    CatalogoController, LoginController e AdminController
-├── model         entidades JPA e enums
+├── controller    catálogo, carrinho, pedidos, login e cadastro
+│   └── admin     painel, produtos, categorias, pedidos e usuários
+├── model         entidades JPA, enums e ItemCarrinho (item do carrinho em sessão)
 └── repository    interfaces Spring Data JPA
 src/main/resources
-├── templates     páginas Thymeleaf (fragmentos.html tem o cabeçalho e o rodapé)
+├── templates     páginas Thymeleaf (fragmentos.html tem o cabeçalho, o menu e o rodapé)
 ├── static        css, js e imagens
 └── application.properties   banco, Thymeleaf e idioma
 docs
-├── telas         imagens das telas planejadas (design no Canva)
+├── telas         imagens das telas (design no Canva)
 ├── diagrama-casos-de-uso.asta e imagens/diagrama-casos-de-uso.png
 └── *.md          documentação da entrega
 ```

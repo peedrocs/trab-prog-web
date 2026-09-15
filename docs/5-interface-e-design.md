@@ -8,8 +8,9 @@ design do Canva. Os dados são de exemplo. O arquivo
 [`telas/telas-papelaria-mgp.pdf`](telas/telas-papelaria-mgp.pdf) junta todas as telas, uma por
 página, para importar no Canva.
 
-As telas de confirmação do pedido, de detalhe do pedido e os cadastros de categorias e usuários
-seguem o mesmo padrão e serão desenhadas na próxima etapa.
+Todas as telas já têm a página Thymeleaf correspondente em `src/main/resources/templates`
+(ver o documento [3. Arquitetura](3-arquitetura.md)). As telas de detalhe do pedido e os
+cadastros de categorias e usuários seguem o mesmo padrão das telas abaixo.
 
 ### Loja
 

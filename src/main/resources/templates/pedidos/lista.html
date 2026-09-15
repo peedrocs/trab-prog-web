@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos :: head('Meus pedidos')}"></head>
+<body>
+<header th:replace="~{fragmentos :: cabecalho('pedidos')}"></header>
+<main id="conteudo" class="container">
+    <div th:replace="~{fragmentos :: mensagens}"></div>
+    <h1>Meus pedidos</h1>
+
+    <p class="vazio" th:if="${#lists.isEmpty(pedidos)}">
+        Você ainda não fez nenhum pedido. <a th:href="@{/}">Ver produtos</a>
+    </p>
+
+    <div class="tabela-container" th:unless="${#lists.isEmpty(pedidos)}">
+        <table class="tabela">
+            <caption class="visualmente-oculto">Pedidos realizados</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Pedido</th>
+                    <th scope="col">Data</th>
+                    <th scope="col">Status</th>
+                    <th scope="col" class="numero">Total</th>
+                    <th scope="col">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="pedido : ${pedidos}">
+                    <td th:text="|#${pedido.id}|">#1</td>
+                    <td th:text="${#temporals.format(pedido.data, 'dd/MM/yyyy HH:mm')}">01/01/2026 10:00</td>
+                    <td><span th:class="|selo status-${pedido.status}|" th:text="${pedido.status.descricao}">Status</span></td>
+                    <td class="numero" th:text="${#numbers.formatCurrency(pedido.total)}">R$ 0,00</td>
+                    <td>
+                        <a class="botao botao-secundario botao-pequeno" th:href="@{/pedidos/{id}(id=${pedido.id})}"
+                           th:aria-label="|Ver detalhes do pedido ${pedido.id}|">Ver detalhes</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+<footer th:replace="~{fragmentos :: rodape}"></footer>
+</body>
+</html>

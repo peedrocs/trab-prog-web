@@ -43,14 +43,14 @@ public class DadosIniciais implements CommandLineRunner {
             Categoria escolar = criarCategoria("Material escolar");
             Categoria escritorio = criarCategoria("Escritório");
 
-            criarProduto("Caneta esferográfica azul", "2.50", 120, "/imagens/caneta.svg", canetas);
-            criarProduto("Caneta esferográfica preta", "2.50", 0, "/imagens/caneta.svg", canetas);
-            criarProduto("Caderno universitário 10 matérias", "24.90", 35, "/imagens/caderno.svg", cadernos);
-            criarProduto("Caderno brochura 96 folhas", "9.90", 50, "/imagens/caderno.svg", cadernos);
-            criarProduto("Lápis de cor 24 cores", "32.00", 18, "/imagens/escolar.svg", escolar);
-            criarProduto("Borracha branca", "1.80", 200, "/imagens/escolar.svg", escolar);
-            criarProduto("Grampeador de mesa", "29.90", 12, "/imagens/escritorio.svg", escritorio);
-            criarProduto("Pasta catálogo 50 envelopes", "18.50", 9, "/imagens/escritorio.svg", escritorio);
+            criarProduto("Caneta esferográfica azul", "Tinta azul, ponta média de 1,0 mm e escrita macia.", "2.50", 120, "/imagens/caneta.svg", canetas);
+            criarProduto("Caneta esferográfica preta", "Tinta preta, ponta média de 1,0 mm e escrita macia.", "2.50", 0, "/imagens/caneta.svg", canetas);
+            criarProduto("Caderno universitário 10 matérias", "Capa dura, 200 folhas pautadas e espiral.", "24.90", 35, "/imagens/caderno.svg", cadernos);
+            criarProduto("Caderno brochura 96 folhas", "Capa flexível, 96 folhas pautadas.", "9.90", 50, "/imagens/caderno.svg", cadernos);
+            criarProduto("Lápis de cor 24 cores", "Estojo com 24 cores, mina macia e resistente.", "32.00", 18, "/imagens/escolar.svg", escolar);
+            criarProduto("Borracha branca", "Borracha macia que não mancha o papel.", "1.80", 200, "/imagens/escolar.svg", escolar);
+            criarProduto("Grampeador de mesa", "Grampeia até 25 folhas, usa grampos 26/6.", "29.90", 12, "/imagens/escritorio.svg", escritorio);
+            criarProduto("Pasta catálogo 50 envelopes", "Pasta tamanho ofício com 50 envelopes plásticos.", "18.50", 9, "/imagens/escritorio.svg", escritorio);
         }
     }
 
@@ -69,9 +69,10 @@ public class DadosIniciais implements CommandLineRunner {
         return categoriaRepository.save(categoria);
     }
 
-    private void criarProduto(String nome, String preco, int estoque, String imagem, Categoria categoria) {
+    private void criarProduto(String nome, String descricao, String preco, int estoque, String imagem, Categoria categoria) {
         Produto produto = new Produto();
         produto.setNome(nome);
+        produto.setDescricao(descricao);
         produto.setPreco(new BigDecimal(preco));
         produto.setEstoque(estoque);
         produto.setImagemUrl(imagem);
