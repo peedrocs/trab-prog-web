@@ -4,7 +4,9 @@
 
 As telas do sistema foram desenhadas com o mesmo visual do site e estão na pasta
 [`telas`](telas/), em PNG, na ordem em que aparecem no uso do sistema. São as imagens usadas no
-design do Canva. Os dados são de exemplo.
+design do Canva. Os dados são de exemplo. O arquivo
+[`telas/telas-papelaria-mgp.pdf`](telas/telas-papelaria-mgp.pdf) junta todas as telas, uma por
+página, para importar no Canva.
 
 As telas de confirmação do pedido, de detalhe do pedido e os cadastros de categorias e usuários
 seguem o mesmo padrão e serão desenhadas na próxima etapa.
