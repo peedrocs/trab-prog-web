@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pedidos | Papelaria MGP</title>
+    <link rel="stylesheet" href="../../src/main/resources/static/css/estilo.css">
+    <script src="../../src/main/resources/static/js/script.js" defer></script>
+</head>
+<body>
+<header class="cabecalho">
+    <a class="pular-conteudo" href="#conteudo">Pular para o conteúdo</a>
+    <div class="container cabecalho-conteudo">
+        <a class="logo" href="catalogo.html">Papelaria MGP</a>
+        <details class="menu-sanfona">
+            <summary><span aria-hidden="true">☰</span> Menu</summary>
+            <nav aria-label="Menu principal">
+                <ul class="menu">
+                    <li class="usuario-logado">Conectado como <span>admin@papelaria.com</span></li>
+                    <li><a href="catalogo.html">Catálogo</a></li>
+                    <li><a href="carrinho.html">Carrinho</a></li>
+                    <li><a href="meus-pedidos.html">Meus pedidos</a></li>
+                    <li><a href="admin-painel.html" aria-current="true">Administração</a></li>
+                    <li>
+                        <form action="login.html" method="get">
+                            <button type="submit" class="botao-link">Sair</button>
+                        </form>
+                    </li>
+                </ul>
+            </nav>
+        </details>
+    </div>
+</header>
+<main id="conteudo" class="container">
+    <nav class="menu-admin" aria-label="Menu da administração">
+        <ul>
+            <li><a href="admin-painel.html">Painel</a></li>
+            <li><a href="admin-produtos-listagem.html">Produtos</a></li>
+            <li><a href="#">Categorias</a></li>
+            <li><a href="admin-pedidos.html" aria-current="true">Pedidos</a></li>
+            <li><a href="#">Usuários</a></li>
+        </ul>
+    </nav>
+
+    <h1>Pedidos</h1>
+
+    <form class="filtros" action="admin-pedidos.html" method="get" aria-label="Filtrar pedidos">
+        <div class="campo">
+            <label for="status">Status</label>
+            <select id="status" name="status">
+                <option value="">Todos</option>
+                <option>Aguardando pagamento</option>
+                <option>Pago</option>
+                <option>Enviado</option>
+                <option>Entregue</option>
+                <option>Cancelado</option>
+            </select>
+        </div>
+        <button type="submit" class="botao">Filtrar</button>
+    </form>
+
+    <div class="tabela-container">
+        <table class="tabela">
+            <caption class="visualmente-oculto">Pedidos da loja</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Pedido</th>
+                    <th scope="col">Cliente</th>
+                    <th scope="col">Data</th>
+                    <th scope="col">Status</th>
+                    <th scope="col" class="numero">Total</th>
+                    <th scope="col">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>#12</td>
+                    <td>Cliente Teste</td>
+                    <td>14/09/2026</td>
+                    <td><span class="selo">Aguardando pagamento</span></td>
+                    <td class="numero">R$ 44,90</td>
+                    <td>
+                        <form class="acoes" action="admin-pedidos.html" method="get">
+                            <label class="visualmente-oculto" for="status-12">Novo status do pedido 12</label>
+                            <select id="status-12" name="status">
+                                <option selected>Aguardando pagamento</option>
+                                <option>Pago</option>
+                                <option>Enviado</option>
+                                <option>Entregue</option>
+                                <option>Cancelado</option>
+                            </select>
+                            <button type="submit" class="botao botao-secundario botao-pequeno" aria-label="Alterar status do pedido 12">Alterar</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr>
+                    <td>#11</td>
+                    <td>João Souza</td>
+                    <td>13/09/2026</td>
+                    <td><span class="selo">Pago</span></td>
+                    <td class="numero">R$ 32,00</td>
+                    <td>
+                        <form class="acoes" action="admin-pedidos.html" method="get">
+                            <label class="visualmente-oculto" for="status-11">Novo status do pedido 11</label>
+                            <select id="status-11" name="status">
+                                <option>Aguardando pagamento</option>
+                                <option selected>Pago</option>
+                                <option>Enviado</option>
+                                <option>Entregue</option>
+                                <option>Cancelado</option>
+                            </select>
+                            <button type="submit" class="botao botao-secundario botao-pequeno" aria-label="Alterar status do pedido 11">Alterar</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr>
+                    <td>#10</td>
+                    <td>Maria Silva</td>
+                    <td>10/09/2026</td>
+                    <td><span class="selo">Enviado</span></td>
+                    <td class="numero">R$ 18,50</td>
+                    <td>
+                        <form class="acoes" action="admin-pedidos.html" method="get">
+                            <label class="visualmente-oculto" for="status-10">Novo status do pedido 10</label>
+                            <select id="status-10" name="status">
+                                <option>Aguardando pagamento</option>
+                                <option>Pago</option>
+                                <option selected>Enviado</option>
+                                <option>Entregue</option>
+                                <option>Cancelado</option>
+                            </select>
+                            <button type="submit" class="botao botao-secundario botao-pequeno" aria-label="Alterar status do pedido 10">Alterar</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr>
+                    <td>#9</td>
+                    <td>Cliente Teste</td>
+                    <td>02/09/2026</td>
+                    <td><span class="selo status-ENTREGUE">Entregue</span></td>
+                    <td class="numero">R$ 61,80</td>
+                    <td>
+                        <form class="acoes" action="admin-pedidos.html" method="get">
+                            <label class="visualmente-oculto" for="status-9">Novo status do pedido 9</label>
+                            <select id="status-9" name="status">
+                                <option>Aguardando pagamento</option>
+                                <option>Pago</option>
+                                <option>Enviado</option>
+                                <option selected>Entregue</option>
+                                <option>Cancelado</option>
+                            </select>
+                            <button type="submit" class="botao botao-secundario botao-pequeno" aria-label="Alterar status do pedido 9">Alterar</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr>
+                    <td>#7</td>
+                    <td>Cliente Teste</td>
+                    <td>25/08/2026</td>
+                    <td><span class="selo status-CANCELADO">Cancelado</span></td>
+                    <td class="numero">R$ 9,90</td>
+                    <td><span class="texto-suave">Pedido cancelado não muda de status</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+<footer class="rodape">
+    <div class="container">
+        <p>&copy; Papelaria MGP</p>
+    </div>
+</footer>
+</body>
+</html>

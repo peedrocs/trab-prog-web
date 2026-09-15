@@ -1,13 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragmentos :: head('Painel administrativo')}"></head>
+<head th:replace="~{fragmentos :: head('Administração')}"></head>
 <body>
 <header th:replace="~{fragmentos :: cabecalho('admin')}"></header>
 <main id="conteudo" class="container">
-    <nav th:replace="~{fragmentos :: menuAdmin('painel')}"></nav>
-    <div th:replace="~{fragmentos :: mensagens}"></div>
-
-    <h1>Painel administrativo</h1>
+    <h1>Administração</h1>
 
     <ul class="painel-cards">
         <li class="card-numero">
@@ -15,12 +12,12 @@
             Produtos cadastrados
         </li>
         <li class="card-numero">
-            <strong th:text="${produtosSemEstoque}">0</strong>
-            Produtos sem estoque
+            <strong th:text="${totalCategorias}">0</strong>
+            Categorias cadastradas
         </li>
         <li class="card-numero">
-            <strong th:text="${pedidosAguardando}">0</strong>
-            Pedidos aguardando pagamento
+            <strong th:text="${totalPedidos}">0</strong>
+            Pedidos registrados
         </li>
         <li class="card-numero">
             <strong th:text="${totalUsuarios}">0</strong>
@@ -29,13 +26,8 @@
     </ul>
 
     <section>
-        <h2>Atalhos</h2>
-        <div class="acoes">
-            <a class="botao" th:href="@{/admin/produtos/novo}">Novo produto</a>
-            <a class="botao" th:href="@{/admin/pedidos}">Gerenciar pedidos</a>
-            <a class="botao" th:href="@{/admin/categorias/novo}">Nova categoria</a>
-            <a class="botao" th:href="@{/admin/cupons/novo}">Novo cupom</a>
-        </div>
+        <h2>Cadastros previstos</h2>
+        <p>Esta área receberá os cadastros de produtos, categorias, pedidos e usuários na próxima etapa.</p>
     </section>
 </main>
 <footer th:replace="~{fragmentos :: rodape}"></footer>

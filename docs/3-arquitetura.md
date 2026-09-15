@@ -2,11 +2,12 @@
 
 ## Arquitetura escolhida
 
-**Spring MVC + Thymeleaf**, ou seja, as páginas são montadas no servidor e o navegador recebe
-HTML pronto. Não é API REST com front separado.
+Spring MVC + Thymeleaf: as páginas são montadas no servidor e o navegador recebe HTML pronto.
+Não é API REST com front separado.
 
-**Banco relacional: MySQL 8**, que roda em um container do Docker descrito no `compose.yaml`.
-O Spring sobe esse container sozinho quando o projeto inicia.
+Banco relacional: MySQL 8, que roda em um container do Docker descrito no `compose.yaml`.
+O Spring sobe esse container sozinho quando o projeto inicia, e o Hibernate cria as tabelas a
+partir das entidades (`spring.jpa.hibernate.ddl-auto=update`).
 
 ## Tecnologias
 
@@ -17,9 +18,7 @@ O Spring sobe esse container sozinho quando o projeto inicia.
 | Web | Spring MVC + Thymeleaf |
 | Persistência | Spring Data JPA (Hibernate) + MySQL 8 |
 | Segurança | Spring Security |
-| Validação | Bean Validation (`@NotBlank`, `@Min`, `@Email`...) |
 | Front-end | HTML, CSS e JavaScript puros |
-| Apoio | Lombok, que gera getters, setters e construtores na compilação |
 
 ## As camadas
 
@@ -27,10 +26,7 @@ O Spring sobe esse container sozinho quando o projeto inicia.
 Navegador
    |
    v
-Controller   recebe a requisição, chama o service e escolhe a página
-   |
-   v
-Service      onde ficam as regras de negócio (estoque, frete, cupom, status)
+Controller   recebe a requisição, busca os dados e escolhe a página
    |
    v
 Repository   interfaces do Spring Data JPA que conversam com o banco
@@ -39,53 +35,69 @@ Repository   interfaces do Spring Data JPA que conversam com o banco
 Model        entidades JPA que viram tabelas no MySQL
 ```
 
-As **Views** ficam em `templates/`, escritas em Thymeleaf, e recebem os dados que o controller
+As views ficam em `templates/`, escritas em Thymeleaf, e recebem os dados que o controller
 colocou no `Model`.
+
+Nesta etapa o controller chama o repository direto, porque ainda não há regras de negócio no
+código. Quando as regras forem implementadas, entra a camada service entre o controller e o
+repository.
 
 ## Pastas
 
 ```
 src/main/java/com/mgp/lojaonline
-├── config        SecurityConfig (segurança) e DadosIniciais (dados de exemplo)
-├── controller    controllers da loja: catálogo, carrinho, pedidos, avaliações, login e cadastro
-│   └── admin     controllers da área administrativa
-├── exception     RegraNegocioException, usada quando uma regra é violada
-├── model         entidades JPA, enums e ItemCarrinho (item do carrinho, não vira tabela)
-├── repository    interfaces do Spring Data JPA
-└── service       regras de negócio
+├── LojaonlineApplication.java   classe que inicia o Spring Boot
+├── config
+│   ├── SecurityConfig.java      quem pode acessar o quê, login e BCrypt
+│   └── DadosIniciais.java       cadastra dados de exemplo na primeira execução
+├── controller
+│   ├── CatalogoController.java  GET /        lista os produtos
+│   ├── LoginController.java     GET /login   abre a tela de login
+│   └── AdminController.java     GET /admin   painel do administrador
+├── model
+│   ├── Usuario.java, Categoria.java, Produto.java, Pedido.java, ItemPedido.java
+│   └── Perfil.java, StatusPedido.java   enums
+└── repository
+    └── UsuarioRepository, CategoriaRepository, ProdutoRepository, PedidoRepository
 
 src/main/resources
-├── templates     páginas Thymeleaf (fragmentos.html tem cabeçalho, menu e rodapé)
-├── static        css/estilo.css, js/script.js e imagens/ (ilustrações dos produtos)
-├── application.properties   configuração do banco, do Thymeleaf e do idioma
-└── messages.properties      mensagens de erro em português
+├── templates
+│   ├── fragmentos.html   cabeçalho, menu e rodapé reaproveitados
+│   ├── index.html        catálogo
+│   ├── login.html        login
+│   ├── error.html        páginas de erro (403, 404 e 500)
+│   └── admin/painel.html painel do administrador
+├── static
+│   ├── css/estilo.css
+│   ├── js/script.js
+│   └── imagens/          ilustrações dos produtos
+└── application.properties   banco, Thymeleaf e idioma
+
+docs
+├── mockups                     telas planejadas, em HTML e CSS puros
+├── diagrama-casos-de-uso.asta  diagrama no Astah
+└── imagens/diagrama-casos-de-uso.png
 ```
 
 ## Entidades e tabelas
 
 | Entidade | Tabela | Relacionamentos |
 |---|---|---|
-| `Usuario` | usuario | tem vários pedidos e avaliações |
+| `Usuario` | usuario | tem vários pedidos |
 | `Categoria` | categoria | tem vários produtos |
 | `Produto` | produto | pertence a uma categoria |
-| `Pedido` | pedido | pertence a um usuário, tem vários itens e pode ter um cupom |
+| `Pedido` | pedido | pertence a um usuário e tem vários itens |
 | `ItemPedido` | item_pedido | liga um pedido a um produto e guarda quantidade e preço da compra |
-| `Cupom` | cupom | pode estar em vários pedidos |
-| `Avaliacao` | avaliacao | liga um usuário a um produto (um por par) |
 
-Os enums `Perfil`, `StatusPedido` e `TipoDesconto` são salvos como texto nas tabelas.
-
-`ItemCarrinho` fica só na memória: o `CarrinhoService` é anotado com `@SessionScope`, então
-cada sessão HTTP tem o seu carrinho guardado no servidor (o navegador guarda apenas o cookie
-da sessão). O item só vira `ItemPedido` quando o cliente confirma a compra.
+Os enums `Perfil` (USER e ADMIN) e `StatusPedido` são salvos pelo nome do valor
+(`EnumType.STRING`), e não pelo número.
 
 ## Exemplo de caminho completo
 
-Quando o cliente clica em **Adicionar ao carrinho**:
+Quando alguém abre a página inicial:
 
-1. `CarrinhoController.adicionar()` recebe o `produtoId` e a quantidade.
-2. Chama `CarrinhoService.adicionar()`, que busca o produto no `ProdutoRepository` e confere as
-   regras: o produto tem estoque? A quantidade cabe no estoque?
-3. Se alguma regra falha, o service lança `RegraNegocioException`, o controller transforma isso em
-   mensagem na tela e devolve o cliente para a página do produto.
-4. Dando tudo certo, o item entra no carrinho da sessão e o cliente vai para `/carrinho`.
+1. O Spring MVC chama `CatalogoController.catalogo()`, mapeado em `GET /`.
+2. O controller pede os produtos ao `ProdutoRepository` (`findAllByOrderByNomeAsc()`).
+3. O Spring Data JPA monta o SQL e o MySQL devolve as linhas, que viram objetos `Produto`.
+4. O controller coloca a lista no `Model` e devolve o nome da página, `index`.
+5. O Thymeleaf monta o `index.html` com um cartão para cada produto.

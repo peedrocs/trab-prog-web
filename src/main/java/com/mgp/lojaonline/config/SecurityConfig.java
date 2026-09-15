@@ -1,24 +1,25 @@
 package com.mgp.lojaonline.config;
 
+import com.mgp.lojaonline.model.Usuario;
+import com.mgp.lojaonline.repository.UsuarioRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 @Configuration
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain filtroDeSeguranca(HttpSecurity http, SessionRegistry registroDeSessoes) throws Exception {
+    public SecurityFilterChain filtroDeSeguranca(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(autorizacao -> autorizacao
-                        .requestMatchers("/", "/produtos/**", "/carrinho/**", "/cadastro", "/login",
-                                "/css/**", "/js/**", "/imagens/**", "/error").permitAll()
+                        .requestMatchers("/", "/login", "/css/**", "/js/**", "/imagens/**", "/error").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .formLogin(login -> login
@@ -27,24 +28,23 @@ public class SecurityConfig {
                         .passwordParameter("senha")
                         .defaultSuccessUrl("/")
                         .permitAll())
-                .logout(logout -> logout.permitAll())
-                // registra as sessões para o admin conseguir encerrar a de um usuário alterado
-                .sessionManagement(sessao -> sessao.sessionConcurrency(concorrencia -> concorrencia
-                        .maximumSessions(-1)
-                        .sessionRegistry(registroDeSessoes)
-                        .expiredUrl("/login?expirou")));
+                .logout(logout -> logout.permitAll());
 
         return http.build();
     }
 
+    // busca o usuario no banco pelo e-mail e informa a senha e o perfil ao Spring Security
     @Bean
-    public SessionRegistry registroDeSessoes() {
-        return new SessionRegistryImpl();
-    }
+    public UserDetailsService detalhesDoUsuario(UsuarioRepository usuarioRepository) {
+        return email -> {
+            Usuario usuario = usuarioRepository.findByEmail(email)
+                    .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
 
-    @Bean
-    public HttpSessionEventPublisher publicadorDeEventosDeSessao() {
-        return new HttpSessionEventPublisher();
+            return User.withUsername(usuario.getEmail())
+                    .password(usuario.getSenha())
+                    .roles(usuario.getPerfil().name())
+                    .build();
+        };
     }
 
     @Bean

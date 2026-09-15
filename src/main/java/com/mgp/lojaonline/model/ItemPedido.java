@@ -1,16 +1,15 @@
 package com.mgp.lojaonline.model;
 
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
 import java.math.BigDecimal;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
 public class ItemPedido {
 
     @Id
@@ -26,17 +25,47 @@ public class ItemPedido {
     @Column(nullable = false)
     private Integer quantidade;
 
+    // preco do produto no momento da compra
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal precoUnitario;
 
-    // guarda o preço vigente no momento da compra
-    public ItemPedido(Produto produto, Integer quantidade) {
-        this.produto = produto;
-        this.quantidade = quantidade;
-        this.precoUnitario = produto.getPreco();
+    public Long getId() {
+        return id;
     }
 
-    public BigDecimal getSubtotal() {
-        return precoUnitario.multiply(BigDecimal.valueOf(quantidade));
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Pedido getPedido() {
+        return pedido;
+    }
+
+    public void setPedido(Pedido pedido) {
+        this.pedido = pedido;
+    }
+
+    public Produto getProduto() {
+        return produto;
+    }
+
+    public void setProduto(Produto produto) {
+        this.produto = produto;
+    }
+
+    public Integer getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(Integer quantidade) {
+        this.quantidade = quantidade;
+    }
+
+    public BigDecimal getPrecoUnitario() {
+        return precoUnitario;
+    }
+
+    public void setPrecoUnitario(BigDecimal precoUnitario) {
+        this.precoUnitario = precoUnitario;
     }
 }

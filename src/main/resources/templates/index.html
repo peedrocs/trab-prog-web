@@ -4,53 +4,26 @@
 <body>
 <header th:replace="~{fragmentos :: cabecalho('catalogo')}"></header>
 <main id="conteudo" class="container">
-    <div th:replace="~{fragmentos :: mensagens}"></div>
-
     <h1>Catálogo de produtos</h1>
-
-    <form class="filtros" th:action="@{/}" method="get" role="search" aria-label="Filtrar produtos">
-        <div class="campo">
-            <label for="busca">Buscar por nome</label>
-            <input type="search" id="busca" name="busca" th:value="${busca}">
-        </div>
-        <div class="campo">
-            <label for="categoriaId">Categoria</label>
-            <select id="categoriaId" name="categoriaId">
-                <option value="">Todas as categorias</option>
-                <option th:each="categoria : ${categorias}" th:value="${categoria.id}" th:text="${categoria.nome}"
-                        th:selected="${categoria.id == categoriaSelecionada}">Categoria</option>
-            </select>
-        </div>
-        <button type="submit" class="botao">Filtrar</button>
-        <a class="botao botao-secundario" th:href="@{/}"
-           th:if="${!#strings.isEmpty(busca) or categoriaSelecionada != null}">Limpar filtros</a>
-    </form>
 
     <ul class="grade-produtos" th:unless="${#lists.isEmpty(produtos)}">
         <li th:each="produto : ${produtos}">
             <article class="card-produto">
-                <img alt="" th:src="@{${produto.imagem}}">
+                <img alt="" th:src="@{${produto.imagemUrl ?: '/imagens/sem-imagem.svg'}}">
                 <div class="card-produto-corpo">
-                    <h2><a th:href="@{/produtos/{id}(id=${produto.id})}" th:text="${produto.nome}">Nome do produto</a></h2>
+                    <h2 th:text="${produto.nome}">Nome do produto</h2>
                     <p class="categoria-produto" th:text="${produto.categoria.nome}">Categoria</p>
                     <p class="preco" th:text="${#numbers.formatCurrency(produto.preco)}">R$ 0,00</p>
-                    <div th:if="${produto.disponivel}">
-                        <span class="selo selo-disponivel">Em estoque</span>
-                    </div>
-                    <form th:if="${produto.disponivel}" th:action="@{/carrinho/adicionar}" method="post">
-                        <input type="hidden" name="produtoId" th:value="${produto.id}">
-                        <input type="hidden" name="quantidade" value="1">
-                        <button type="submit" class="botao"
-                                th:aria-label="|Adicionar ao carrinho: ${produto.nome}|">Adicionar ao carrinho</button>
-                    </form>
-                    <button class="botao" type="button" disabled th:unless="${produto.disponivel}"
-                            th:aria-label="|Indisponível: ${produto.nome}|">Indisponível</button>
+                    <p>
+                        <span class="selo selo-disponivel" th:if="${produto.estoque > 0}">Em estoque</span>
+                        <span class="selo selo-indisponivel" th:unless="${produto.estoque > 0}">Indisponível</span>
+                    </p>
                 </div>
             </article>
         </li>
     </ul>
 
-    <p class="vazio" th:if="${#lists.isEmpty(produtos)}">Nenhum produto encontrado.</p>
+    <p class="vazio" th:if="${#lists.isEmpty(produtos)}">Nenhum produto cadastrado.</p>
 </main>
 <footer th:replace="~{fragmentos :: rodape}"></footer>
 </body>

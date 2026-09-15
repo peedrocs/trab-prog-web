@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Novo produto | Papelaria MGP</title>
+    <link rel="stylesheet" href="../../src/main/resources/static/css/estilo.css">
+    <script src="../../src/main/resources/static/js/script.js" defer></script>
+</head>
+<body>
+<header class="cabecalho">
+    <a class="pular-conteudo" href="#conteudo">Pular para o conteúdo</a>
+    <div class="container cabecalho-conteudo">
+        <a class="logo" href="catalogo.html">Papelaria MGP</a>
+        <details class="menu-sanfona">
+            <summary><span aria-hidden="true">☰</span> Menu</summary>
+            <nav aria-label="Menu principal">
+                <ul class="menu">
+                    <li class="usuario-logado">Conectado como <span>admin@papelaria.com</span></li>
+                    <li><a href="catalogo.html">Catálogo</a></li>
+                    <li><a href="carrinho.html">Carrinho</a></li>
+                    <li><a href="meus-pedidos.html">Meus pedidos</a></li>
+                    <li><a href="admin-painel.html" aria-current="true">Administração</a></li>
+                    <li>
+                        <form action="login.html" method="get">
+                            <button type="submit" class="botao-link">Sair</button>
+                        </form>
+                    </li>
+                </ul>
+            </nav>
+        </details>
+    </div>
+</header>
+<main id="conteudo" class="container">
+    <nav class="menu-admin" aria-label="Menu da administração">
+        <ul>
+            <li><a href="admin-painel.html">Painel</a></li>
+            <li><a href="admin-produtos-listagem.html" aria-current="true">Produtos</a></li>
+            <li><a href="#">Categorias</a></li>
+            <li><a href="admin-pedidos.html">Pedidos</a></li>
+            <li><a href="#">Usuários</a></li>
+        </ul>
+    </nav>
+
+    <h1>Novo produto</h1>
+
+    <form class="formulario" action="admin-produtos-listagem.html" method="get">
+        <div class="campo">
+            <label for="nome">Nome</label>
+            <input type="text" id="nome" name="nome" required maxlength="100">
+        </div>
+        <div class="campo">
+            <label for="descricao">Descrição (opcional)</label>
+            <textarea id="descricao" name="descricao" rows="4" maxlength="1000"></textarea>
+        </div>
+        <div class="campo">
+            <label for="preco">Preço (R$)</label>
+            <input type="number" id="preco" name="preco" step="0.01" min="0.01" required>
+        </div>
+        <div class="campo">
+            <label for="estoque">Estoque</label>
+            <input type="number" id="estoque" name="estoque" min="0" step="1" required>
+        </div>
+        <div class="campo">
+            <label for="categoria">Categoria</label>
+            <select id="categoria" name="categoria" required>
+                <option value="">Selecione uma categoria</option>
+                <option>Canetas</option>
+                <option>Cadernos</option>
+                <option>Material escolar</option>
+                <option>Escritório</option>
+            </select>
+        </div>
+        <div class="campo">
+            <label for="imagemUrl">URL da imagem (opcional)</label>
+            <input type="text" id="imagemUrl" name="imagemUrl" maxlength="255" aria-describedby="imagemUrl-dica">
+            <p class="dica" id="imagemUrl-dica">Ex.: /imagens/caneta.svg ou um endereço https://</p>
+        </div>
+        <div class="acoes-formulario">
+            <button type="submit" class="botao">Salvar</button>
+            <a class="botao botao-secundario" href="admin-produtos-listagem.html">Cancelar</a>
+        </div>
+    </form>
+</main>
+<footer class="rodape">
+    <div class="container">
+        <p>&copy; Papelaria MGP</p>
+    </div>
+</footer>
+</body>
+</html>

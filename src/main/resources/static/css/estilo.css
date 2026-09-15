@@ -465,7 +465,7 @@ h2 {
     font-weight: 700;
 }
 
-/* status-* vem do nome do enum StatusPedido; os demais status usam a cor padrão do .selo */
+/* status-* vem do nome do enum StatusPedido */
 .selo-disponivel,
 .status-ENTREGUE {
     color: var(--cor-sucesso);
@@ -507,31 +507,6 @@ h2 {
 .form-carrinho .campo {
     width: 7rem;
     margin: 0;
-}
-
-.lista-avaliacoes {
-    display: grid;
-    gap: 0.75rem;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-
-.avaliacao {
-    padding: 1rem;
-    border: 1px solid var(--cor-borda);
-    border-radius: var(--raio);
-    background: var(--cor-superficie);
-}
-
-.avaliacao p {
-    margin: 0.25rem 0;
-}
-
-.estrelas {
-    color: #92400e;
-    font-weight: 700;
-    letter-spacing: 1px;
 }
 
 .tabela-container {

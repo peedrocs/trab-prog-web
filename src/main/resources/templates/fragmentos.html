@@ -23,15 +23,6 @@
                         Conectado como <span sec:authentication="name">usuario@email.com</span>
                     </li>
                     <li><a th:href="@{/}" th:aria-current="${paginaAtual == 'catalogo'} ? 'true'">Catálogo</a></li>
-                    <li>
-                        <a th:href="@{/carrinho}" th:aria-current="${paginaAtual == 'carrinho'} ? 'true'">
-                            Carrinho
-                            <span class="contador" th:if="${quantidadeCarrinho != null and quantidadeCarrinho > 0}">(<span th:text="${quantidadeCarrinho}">0</span><span class="visualmente-oculto"> itens</span>)</span>
-                        </a>
-                    </li>
-                    <li sec:authorize="isAuthenticated()">
-                        <a th:href="@{/pedidos}" th:aria-current="${paginaAtual == 'pedidos'} ? 'true'">Meus pedidos</a>
-                    </li>
                     <li sec:authorize="hasRole('ADMIN')">
                         <a th:href="@{/admin}" th:aria-current="${paginaAtual == 'admin'} ? 'true'">Administração</a>
                     </li>
@@ -48,57 +39,6 @@
         </details>
     </div>
 </header>
-
-<div th:fragment="mensagens">
-    <p class="alerta alerta-sucesso" role="status" th:if="${sucesso}" th:text="${sucesso}">Mensagem de sucesso</p>
-    <p class="alerta alerta-erro" role="alert" th:if="${erro}" th:text="${erro}">Mensagem de erro</p>
-</div>
-
-<nav th:fragment="menuAdmin(secao)" class="menu-admin" aria-label="Menu da administração">
-    <ul>
-        <li><a th:href="@{/admin}" th:aria-current="${secao == 'painel'} ? 'true'">Painel</a></li>
-        <li><a th:href="@{/admin/produtos}" th:aria-current="${secao == 'produtos'} ? 'true'">Produtos</a></li>
-        <li><a th:href="@{/admin/categorias}" th:aria-current="${secao == 'categorias'} ? 'true'">Categorias</a></li>
-        <li><a th:href="@{/admin/pedidos}" th:aria-current="${secao == 'pedidos'} ? 'true'">Pedidos</a></li>
-        <li><a th:href="@{/admin/cupons}" th:aria-current="${secao == 'cupons'} ? 'true'">Cupons</a></li>
-        <li><a th:href="@{/admin/usuarios}" th:aria-current="${secao == 'usuarios'} ? 'true'">Usuários</a></li>
-    </ul>
-</nav>
-
-<div th:fragment="itensPedido(pedido)" class="tabela-container">
-    <table class="tabela">
-        <caption class="visualmente-oculto">Itens do pedido</caption>
-        <thead>
-            <tr>
-                <th scope="col">Produto</th>
-                <th scope="col" class="numero">Preço unitário</th>
-                <th scope="col" class="numero">Quantidade</th>
-                <th scope="col" class="numero">Subtotal</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="item : ${pedido.itens}">
-                <td th:text="${item.produto.nome}">Caneta Esferográfica Azul</td>
-                <td class="numero" th:text="${#numbers.formatCurrency(item.precoUnitario)}">R$ 2,50</td>
-                <td class="numero" th:text="${item.quantidade}">1</td>
-                <td class="numero" th:text="${#numbers.formatCurrency(item.subtotal)}">R$ 2,50</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<dl th:fragment="resumoPedido(pedido)">
-    <dt>Subtotal</dt>
-    <dd th:text="${#numbers.formatCurrency(pedido.subtotal)}">R$ 0,00</dd>
-    <th:block th:if="${pedido.cupom != null}">
-        <dt th:text="|Desconto (cupom ${pedido.cupom.codigo})|">Desconto</dt>
-        <dd th:text="|- ${#numbers.formatCurrency(pedido.desconto)}|">- R$ 0,00</dd>
-    </th:block>
-    <dt>Frete</dt>
-    <dd th:text="${pedido.frete == 0} ? 'Grátis' : ${#numbers.formatCurrency(pedido.frete)}">R$ 0,00</dd>
-    <dt class="total">Total</dt>
-    <dd class="total" th:text="${#numbers.formatCurrency(pedido.total)}">R$ 0,00</dd>
-</dl>
 
 <footer th:fragment="rodape" class="rodape">
     <div class="container">
