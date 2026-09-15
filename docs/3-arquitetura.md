@@ -64,7 +64,7 @@ src/main/java/com/mgp/lojaonline
 ├── model
 │   ├── Usuario.java, Categoria.java, Produto.java, Pedido.java, ItemPedido.java   entidades
 │   ├── Perfil.java, StatusPedido.java   enums
-│   └── ItemCarrinho.java                item do carrinho em sessão, não vira tabela
+│   └── ItemCarrinho.java                item montado a partir do carrinho da sessão, não vira tabela
 └── repository
     └── UsuarioRepository, CategoriaRepository, ProdutoRepository, PedidoRepository
 

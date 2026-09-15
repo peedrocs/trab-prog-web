@@ -58,6 +58,8 @@ public class PedidoController {
     @PostMapping("/finalizar")
     public String finalizar(Principal principal, HttpSession sessao, RedirectAttributes atributos) {
         Map<Long, Integer> carrinho = CarrinhoController.carrinho(sessao);
+        // produto excluido depois de entrar no carrinho sai do carrinho
+        carrinho.keySet().removeIf(produtoId -> !produtoRepository.existsById(produtoId));
         if (carrinho.isEmpty()) {
             atributos.addFlashAttribute("erro", "Seu carrinho está vazio");
             return "redirect:/carrinho";

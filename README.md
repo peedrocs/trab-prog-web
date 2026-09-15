@@ -44,7 +44,7 @@ a classe `DadosIniciais` cadastra as categorias, alguns produtos e as contas de 
 ## O que está no esqueleto
 
 - Entidades JPA (`Usuario`, `Categoria`, `Produto`, `Pedido` e `ItemPedido`) que viram tabelas no MySQL.
-- Repositories do Spring Data JPA para cada entidade.
+- Repositories do Spring Data JPA para Usuario, Categoria, Produto e Pedido (o ItemPedido é salvo junto com o pedido).
 - Controllers e páginas Thymeleaf de todas as telas: catálogo com busca e filtro, página do
   produto, carrinho, cadastro, login, pedidos do cliente, painel do administrador, CRUD de
   produtos e de categorias, pedidos (com troca de status) e usuários.
@@ -61,7 +61,7 @@ src/main/java/com/mgp/lojaonline
 ├── config        SecurityConfig (segurança) e DadosIniciais (dados de exemplo)
 ├── controller    catálogo, carrinho, pedidos, login e cadastro
 │   └── admin     painel, produtos, categorias, pedidos e usuários
-├── model         entidades JPA, enums e ItemCarrinho (item do carrinho em sessão)
+├── model         entidades JPA, enums e ItemCarrinho (item montado a partir do carrinho da sessão)
 └── repository    interfaces Spring Data JPA
 src/main/resources
 ├── templates     páginas Thymeleaf (fragmentos.html tem o cabeçalho, o menu e o rodapé)

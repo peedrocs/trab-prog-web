@@ -43,7 +43,7 @@ Para abrir ou editar: Astah UML, menu **Arquivo > Abrir**. Para gerar a imagem d
 | UC9 Gerenciar produtos e categorias | Cadastra, lista, edita e exclui produtos e categorias |
 | UC10 Gerenciar cupons | Cadastra, lista, edita e exclui cupons de desconto. Diferencial planejado |
 | UC11 Mudar status dos pedidos | Vê todos os pedidos e muda o status. Cancelar devolve o estoque |
-| UC12 Gerenciar usuários | Lista os usuários e promove um cliente a administrador |
+| UC12 Gerenciar usuários | Lista os usuários e troca o perfil entre cliente e administrador (menos o próprio) |
 
 Os casos de uso marcados como diferencial estão detalhados no documento
 [5. Interface e design](5-interface-e-design.md).
@@ -51,7 +51,8 @@ Os casos de uso marcados como diferencial estão detalhados no documento
 ## Fluxo principal: da vitrine ao pedido
 
 1. O visitante abre o catálogo e adiciona produtos ao carrinho.
-2. Ao clicar em **Finalizar compra**, o sistema pede login (ou cadastro).
-3. Na tela de confirmação ele vê os itens e o total.
-4. Ao confirmar, o pedido nasce como **Aguardando pagamento** e o estoque é descontado.
-5. O admin acompanha o pedido e vai mudando o status até **Entregue**.
+2. No carrinho, ele clica em Entrar para finalizar e faz login (ou cadastro).
+3. De volta ao carrinho, confere os itens e o total.
+4. Ao clicar em Finalizar compra, o pedido nasce como Aguardando pagamento (na próxima etapa o
+   estoque será descontado nesse momento).
+5. O admin acompanha o pedido e vai mudando o status até Entregue.

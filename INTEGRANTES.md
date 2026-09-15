@@ -1,6 +1,7 @@
 # Integrantes do grupo
 
-Projeto: **Papelaria MGP - Loja Online**
+Projeto: Papelaria MGP - Loja Online
+
 Disciplina: Programação Web - UFMS
 
 | Nome completo | O que fez no projeto |

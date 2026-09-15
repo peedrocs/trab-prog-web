@@ -46,6 +46,9 @@ public class ProdutoAdminController {
     // o id enviado pelo select de categoria vira um objeto Categoria
     @PostMapping("/salvar")
     public String salvar(@ModelAttribute Produto produto, RedirectAttributes atributos) {
+        if (produto.getImagemUrl() != null && produto.getImagemUrl().isBlank()) {
+            produto.setImagemUrl(null);
+        }
         produtoRepository.save(produto);
         atributos.addFlashAttribute("sucesso", "Produto salvo com sucesso");
         return "redirect:/admin/produtos";

@@ -40,6 +40,8 @@ public class AutenticacaoController {
             return "cadastro";
         }
 
+        // ignora id e perfil que venham do formulario: cadastro sempre cria um cliente novo
+        usuario.setId(null);
         usuario.setSenha(codificadorDeSenha.encode(usuario.getSenha()));
         usuario.setPerfil(Perfil.USER);
         usuarioRepository.save(usuario);

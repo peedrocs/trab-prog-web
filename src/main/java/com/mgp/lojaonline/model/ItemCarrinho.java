@@ -2,7 +2,7 @@ package com.mgp.lojaonline.model;
 
 import java.math.BigDecimal;
 
-// item do carrinho guardado na sessao, nao vira tabela
+// item montado a partir do carrinho da sessao para mostrar a pagina, nao vira tabela
 public class ItemCarrinho {
 
     private final Produto produto;

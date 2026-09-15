@@ -43,8 +43,13 @@ public class CategoriaAdminController {
     }
 
     @PostMapping("/salvar")
-    public String salvar(@ModelAttribute Categoria categoria, RedirectAttributes atributos) {
-        categoriaRepository.save(categoria);
+    public String salvar(@ModelAttribute Categoria categoria, Model model, RedirectAttributes atributos) {
+        try {
+            categoriaRepository.save(categoria);
+        } catch (DataIntegrityViolationException e) {
+            model.addAttribute("erro", "Já existe uma categoria com este nome");
+            return "admin/categorias/formulario";
+        }
         atributos.addFlashAttribute("sucesso", "Categoria salva com sucesso");
         return "redirect:/admin/categorias";
     }

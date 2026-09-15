@@ -29,7 +29,7 @@
                         <form th:action="@{/admin/usuarios/{id}/perfil(id=${usuario.id})}" method="post">
                             <button type="submit" class="botao botao-secundario botao-pequeno"
                                     th:text="${usuario.perfil.name() == 'ADMIN'} ? 'Tornar cliente' : 'Tornar administrador'"
-                                    th:aria-label="|Alterar perfil de ${usuario.nome}|">Alterar perfil</button>
+                                    th:aria-label="${usuario.perfil.name() == 'ADMIN'} ? |Tornar ${usuario.nome} cliente| : |Tornar ${usuario.nome} administrador|">Alterar perfil</button>
                         </form>
                     </td>
                 </tr>

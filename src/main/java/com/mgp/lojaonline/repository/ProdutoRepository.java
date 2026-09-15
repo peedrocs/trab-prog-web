@@ -12,4 +12,6 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
     List<Produto> findByNomeContainingIgnoreCaseOrderByNomeAsc(String nome);
 
     List<Produto> findByCategoriaIdAndNomeContainingIgnoreCaseOrderByNomeAsc(Long categoriaId, String nome);
+
+    long countByEstoque(Integer estoque);
 }
