@@ -13,7 +13,7 @@ do tema, das regras de negócio, dos casos de uso e das telas planejadas.
 - [2. Diagrama de casos de uso](docs/2-casos-de-uso.md)
 - [3. Arquitetura do projeto](docs/3-arquitetura.md)
 - [4. Segurança e acessibilidade](docs/4-seguranca-e-acessibilidade.md)
-- [5. Interface e design: mockups, fluxo de CRUD e diferenciais](docs/5-interface-e-design.md)
+- [5. Interface e design: telas, fluxo de CRUD e diferenciais](docs/5-interface-e-design.md)
 
 ## Tecnologias
 
@@ -48,7 +48,8 @@ a classe `DadosIniciais` cadastra as categorias, alguns produtos e as contas de 
 - Controllers do catálogo, do login e do painel administrativo.
 - Páginas Thymeleaf do catálogo, do login, do painel e de erro, com o CSS e o JavaScript do site.
 - Spring Security com login por formulário, senhas em BCrypt e a área `/admin` restrita ao `ROLE_ADMIN`.
-- Mockups das demais telas (carrinho, cadastro, pedidos e o CRUD de produtos) em `docs/mockups`.
+- Telas planejadas (carrinho, cadastro, pedidos e o CRUD de produtos) desenhadas no Canva, com
+  as imagens em `docs/telas`.
 
 As regras de negócio e os cadastros (CRUD) serão implementados na próxima etapa.
 
@@ -65,7 +66,7 @@ src/main/resources
 ├── static        css, js e imagens
 └── application.properties   banco, Thymeleaf e idioma
 docs
-├── mockups       telas planejadas em HTML e CSS puros
+├── telas         imagens das telas planejadas (design no Canva)
 ├── diagrama-casos-de-uso.asta e imagens/diagrama-casos-de-uso.png
 └── *.md          documentação da entrega
 ```

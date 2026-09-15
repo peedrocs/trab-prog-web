@@ -10,4 +10,4 @@ Disciplina: Programação Web - UFMS
 | Lucas dos Reis Schweich | Configuração inicial do Spring Security e planejamento de acessibilidade |
 | Marcus Vinícius Perez da Silva Balbuena | Entidades JPA, repositories e banco MySQL no Docker |
 | Pedro Cavalcante Sanches | Regras de negócio, controllers e planejamento dos diferenciais |
-| Sérgio Henrique Lamarque Silva | Mockups das telas e fluxo de CRUD |
+| Sérgio Henrique Lamarque Silva | Telas no Canva e fluxo de CRUD |

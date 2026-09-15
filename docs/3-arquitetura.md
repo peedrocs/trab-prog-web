@@ -74,7 +74,7 @@ src/main/resources
 └── application.properties   banco, Thymeleaf e idioma
 
 docs
-├── mockups                     telas planejadas, em HTML e CSS puros
+├── telas                       imagens das telas planejadas (design no Canva)
 ├── diagrama-casos-de-uso.asta  diagrama no Astah
 └── imagens/diagrama-casos-de-uso.png
 ```

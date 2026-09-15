@@ -55,8 +55,8 @@ insere sozinho o campo escondido com o token.
 
 ## Acessibilidade (WCAG 2.1 AA)
 
-As diretrizes abaixo já estão aplicadas nas páginas prontas e nos mockups, e valem para todas as
-telas que ainda serão codificadas.
+As diretrizes abaixo já estão aplicadas nas páginas prontas e nas telas planejadas, e valem para
+todas as telas que ainda serão codificadas.
 
 ### Contraste
 
