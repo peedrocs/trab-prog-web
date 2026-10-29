@@ -2,10 +2,12 @@ package com.mgp.lojaonline.controller.admin;
 
 import com.mgp.lojaonline.model.Categoria;
 import com.mgp.lojaonline.repository.CategoriaRepository;
+import jakarta.validation.Valid;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,7 +45,11 @@ public class CategoriaAdminController {
     }
 
     @PostMapping("/salvar")
-    public String salvar(@ModelAttribute Categoria categoria, Model model, RedirectAttributes atributos) {
+    public String salvar(@Valid @ModelAttribute Categoria categoria, BindingResult resultado, Model model,
+                         RedirectAttributes atributos) {
+        if (resultado.hasErrors()) {
+            return "admin/categorias/formulario";
+        }
         try {
             categoriaRepository.save(categoria);
         } catch (DataIntegrityViolationException e) {
@@ -51,23 +57,6 @@ public class CategoriaAdminController {
             return "admin/categorias/formulario";
         }
         atributos.addFlashAttribute("sucesso", "Categoria salva com sucesso");
-        return "redirect:/admin/categorias";
-    }
-
-    @GetMapping("/{id}/excluir")
-    public String confirmarExclusao(@PathVariable Long id, Model model) {
-        model.addAttribute("categoria", buscar(id));
-        return "admin/categorias/excluir";
-    }
-
-    @PostMapping("/{id}/excluir")
-    public String excluir(@PathVariable Long id, RedirectAttributes atributos) {
-        try {
-            categoriaRepository.deleteById(id);
-            atributos.addFlashAttribute("sucesso", "Categoria excluída com sucesso");
-        } catch (DataIntegrityViolationException e) {
-            atributos.addFlashAttribute("erro", "Categoria que tem produtos não pode ser excluída");
-        }
         return "redirect:/admin/categorias";
     }
 

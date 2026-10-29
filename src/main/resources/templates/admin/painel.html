@@ -11,31 +11,73 @@
 
     <ul class="painel-cards">
         <li class="card-numero">
-            <strong th:text="${totalProdutos}">0</strong>
-            Produtos cadastrados
+            <strong th:text="${#numbers.formatCurrency(faturamentoHoje)}">R$ 0,00</strong>
+            Faturamento de hoje
         </li>
         <li class="card-numero">
-            <strong th:text="${produtosSemEstoque}">0</strong>
-            Produtos sem estoque
+            <strong th:text="${#numbers.formatCurrency(faturamentoMes)}">R$ 0,00</strong>
+            Faturamento do mês
         </li>
         <li class="card-numero">
-            <strong th:text="${pedidosAguardando}">0</strong>
-            Pedidos aguardando pagamento
-        </li>
-        <li class="card-numero">
-            <strong th:text="${totalUsuarios}">0</strong>
-            Usuários cadastrados
+            <strong th:text="${#numbers.formatCurrency(ticketMedio)}">R$ 0,00</strong>
+            Ticket médio do mês
         </li>
     </ul>
+    <p class="dica">Só entram pedidos pagos (Pago, Em separação, Enviado e Entregue).</p>
 
-    <section>
-        <h2>Atalhos</h2>
-        <div class="acoes">
-            <a class="botao" th:href="@{/admin/produtos/novo}">Novo produto</a>
-            <a class="botao" th:href="@{/admin/produtos}">Gerenciar produtos</a>
-            <a class="botao" th:href="@{/admin/pedidos}">Gerenciar pedidos</a>
-        </div>
-    </section>
+    <div class="painel-tabelas">
+        <section aria-labelledby="titulo-status">
+            <h2 id="titulo-status">Pedidos por status</h2>
+            <div class="tabela-container">
+                <table class="tabela">
+                    <caption class="visualmente-oculto">Quantidade de pedidos em cada status</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Status</th>
+                            <th scope="col" class="numero">Pedidos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="linha : ${pedidosPorStatus}">
+                            <td>
+                                <a th:href="@{/admin/pedidos(status=${linha.key})}" th:text="${linha.key.descricao}">Status</a>
+                            </td>
+                            <td class="numero" th:text="${linha.value}">0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section aria-labelledby="titulo-estoque">
+            <h2 id="titulo-estoque">Estoque baixo</h2>
+            <p class="dica" th:text="|Produtos ativos com ${limiteEstoque} unidades ou menos.|">Produtos ativos com 5 unidades ou menos.</p>
+            <p class="vazio" th:if="${#lists.isEmpty(estoqueBaixo)}">Nenhum produto com estoque baixo.</p>
+            <div class="tabela-container" th:unless="${#lists.isEmpty(estoqueBaixo)}">
+                <table class="tabela">
+                    <caption class="visualmente-oculto">Produtos com estoque baixo</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Produto</th>
+                            <th scope="col" class="numero">Estoque</th>
+                            <th scope="col">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="produto : ${estoqueBaixo}">
+                            <td th:text="${produto.nome}">Produto</td>
+                            <td class="numero" th:text="${produto.estoque}">0</td>
+                            <td>
+                                <a class="botao botao-secundario botao-pequeno"
+                                   th:href="@{/admin/produtos/{id}/editar(id=${produto.id})}"
+                                   th:aria-label="|Repor estoque de ${produto.nome}|">Repor estoque</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
 </main>
 <footer th:replace="~{fragmentos :: rodape}"></footer>
 </body>

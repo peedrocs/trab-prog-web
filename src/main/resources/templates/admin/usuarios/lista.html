@@ -16,7 +16,9 @@
                 <tr>
                     <th scope="col">Nome</th>
                     <th scope="col">E-mail</th>
+                    <th scope="col">CPF</th>
                     <th scope="col">Perfil</th>
+                    <th scope="col">Situação</th>
                     <th scope="col">Ações</th>
                 </tr>
             </thead>
@@ -24,13 +26,25 @@
                 <tr th:each="usuario : ${usuarios}">
                     <td th:text="${usuario.nome}">Nome</td>
                     <td th:text="${usuario.email}">email</td>
+                    <td th:text="${usuario.cpf != null} ? ${usuario.cpfFormatado} : 'Não informado'">000.000.000-00</td>
                     <td th:text="${usuario.perfil.name() == 'ADMIN'} ? 'Administrador' : 'Cliente'">Cliente</td>
+                    <td th:text="${usuario.ativo} ? 'Ativa' : 'Desativada'">Ativa</td>
                     <td>
-                        <form th:action="@{/admin/usuarios/{id}/perfil(id=${usuario.id})}" method="post">
-                            <button type="submit" class="botao botao-secundario botao-pequeno"
-                                    th:text="${usuario.perfil.name() == 'ADMIN'} ? 'Tornar cliente' : 'Tornar administrador'"
-                                    th:aria-label="${usuario.perfil.name() == 'ADMIN'} ? |Tornar ${usuario.nome} cliente| : |Tornar ${usuario.nome} administrador|">Alterar perfil</button>
-                        </form>
+                        <div class="acoes">
+                            <form th:action="@{/admin/usuarios/{id}/perfil(id=${usuario.id})}" method="post">
+                                <button type="submit" class="botao botao-secundario botao-pequeno"
+                                        th:text="${usuario.perfil.name() == 'ADMIN'} ? 'Tornar cliente' : 'Tornar administrador'"
+                                        th:aria-label="${usuario.perfil.name() == 'ADMIN'} ? |Tornar ${usuario.nome} cliente| : |Tornar ${usuario.nome} administrador|">Alterar perfil</button>
+                            </form>
+                            <form th:action="@{/admin/usuarios/{id}/ativo(id=${usuario.id})}" method="post">
+                                <button type="submit" class="botao botao-secundario botao-pequeno"
+                                        th:text="${usuario.ativo} ? 'Desativar conta' : 'Ativar conta'"
+                                        th:aria-label="${usuario.ativo} ? |Desativar a conta de ${usuario.nome}| : |Ativar a conta de ${usuario.nome}|">Desativar conta</button>
+                            </form>
+                            <a class="botao botao-perigo botao-pequeno"
+                               th:href="@{/admin/exclusao(tipo='USUARIO', busca=${usuario.email}, id=${usuario.id})}"
+                               th:aria-label="|Excluir ${usuario.nome}|">Excluir</a>
+                        </div>
                     </td>
                 </tr>
             </tbody>

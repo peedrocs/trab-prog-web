@@ -14,7 +14,15 @@
 
         <div class="campo">
             <label for="nome">Nome</label>
-            <input type="text" th:field="*{nome}" required maxlength="50">
+            <input type="text" th:field="*{nome}" required maxlength="50"
+                   th:aria-invalid="${#fields.hasErrors('nome')} ? 'true'"
+                   th:aria-describedby="${#fields.hasErrors('nome')} ? 'nome-erro'">
+            <p class="erro-campo" id="nome-erro" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}">Erro</p>
+        </div>
+
+        <div class="campo-marcar">
+            <input type="checkbox" th:field="*{ativa}">
+            <label th:for="${#ids.prev('ativa')}">Categoria ativa (aparece na loja)</label>
         </div>
 
         <div class="acoes-formulario">

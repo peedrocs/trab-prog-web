@@ -8,4 +8,8 @@ import java.util.List;
 public interface CategoriaRepository extends JpaRepository<Categoria, Long> {
 
     List<Categoria> findAllByOrderByNomeAsc();
+
+    List<Categoria> findByAtivaTrueOrderByNomeAsc();
+
+    List<Categoria> findByNomeContainingIgnoreCaseOrderByNomeAsc(String nome);
 }

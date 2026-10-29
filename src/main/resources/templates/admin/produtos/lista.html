@@ -24,6 +24,7 @@
                     <th scope="col">Categoria</th>
                     <th scope="col" class="numero">Preço</th>
                     <th scope="col" class="numero">Estoque</th>
+                    <th scope="col">Situação</th>
                     <th scope="col">Ações</th>
                 </tr>
             </thead>
@@ -37,13 +38,14 @@
                         <span th:text="${produto.estoque}">0</span>
                         <span class="selo selo-indisponivel" th:if="${produto.estoque == 0}">Sem estoque</span>
                     </td>
+                    <td th:text="${produto.ativo} ? 'Ativo' : 'Desativado'">Ativo</td>
                     <td>
                         <div class="acoes">
                             <a class="botao botao-secundario botao-pequeno"
                                th:href="@{/admin/produtos/{id}/editar(id=${produto.id})}"
                                th:aria-label="|Editar ${produto.nome}|">Editar</a>
                             <a class="botao botao-perigo botao-pequeno"
-                               th:href="@{/admin/produtos/{id}/excluir(id=${produto.id})}"
+                               th:href="@{/admin/exclusao(tipo='PRODUTO', busca=${produto.nome}, id=${produto.id})}"
                                th:aria-label="|Excluir ${produto.nome}|">Excluir</a>
                         </div>
                     </td>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos :: head('Esqueci minha senha')}"></head>
+<body>
+<header th:replace="~{fragmentos :: cabecalho('login')}"></header>
+<main id="conteudo" class="container">
+    <section class="formulario formulario-centralizado">
+        <h1>Esqueci minha senha</h1>
+        <div th:replace="~{fragmentos :: mensagens}"></div>
+
+        <p>Informe o e-mail da sua conta. Vamos enviar um link para você criar uma senha nova.</p>
+
+        <form th:action="@{/senha/esqueci}" method="post">
+            <div class="campo">
+                <label for="email">E-mail</label>
+                <input type="email" id="email" name="email" required autocomplete="email">
+            </div>
+            <div class="acoes-formulario">
+                <button type="submit" class="botao">Enviar link</button>
+                <a class="botao botao-secundario" th:href="@{/login}">Voltar</a>
+            </div>
+        </form>
+    </section>
+</main>
+<footer th:replace="~{fragmentos :: rodape}"></footer>
+</body>
+</html>

@@ -20,19 +20,21 @@
             <thead>
                 <tr>
                     <th scope="col">Nome</th>
+                    <th scope="col">Situação</th>
                     <th scope="col">Ações</th>
                 </tr>
             </thead>
             <tbody>
                 <tr th:each="categoria : ${categorias}">
                     <td th:text="${categoria.nome}">Categoria</td>
+                    <td th:text="${categoria.ativa} ? 'Ativa' : 'Desativada'">Ativa</td>
                     <td>
                         <div class="acoes">
                             <a class="botao botao-secundario botao-pequeno"
                                th:href="@{/admin/categorias/{id}/editar(id=${categoria.id})}"
                                th:aria-label="|Editar ${categoria.nome}|">Editar</a>
                             <a class="botao botao-perigo botao-pequeno"
-                               th:href="@{/admin/categorias/{id}/excluir(id=${categoria.id})}"
+                               th:href="@{/admin/exclusao(tipo='CATEGORIA', busca=${categoria.nome}, id=${categoria.id})}"
                                th:aria-label="|Excluir ${categoria.nome}|">Excluir</a>
                         </div>
                     </td>

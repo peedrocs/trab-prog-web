@@ -8,20 +8,37 @@
         <h1>Criar conta</h1>
         <div th:replace="~{fragmentos :: mensagens}"></div>
 
-        <form th:action="@{/cadastro}" th:object="${usuario}" method="post">
+        <form th:action="@{/cadastro}" th:object="${dados}" method="post">
             <div class="campo">
                 <label for="nome">Nome</label>
-                <input type="text" th:field="*{nome}" required maxlength="100" autocomplete="name">
+                <input type="text" th:field="*{nome}" required maxlength="100" autocomplete="name"
+                       th:aria-invalid="${#fields.hasErrors('nome')} ? 'true'"
+                       th:aria-describedby="${#fields.hasErrors('nome')} ? 'nome-erro'">
+                <p class="erro-campo" id="nome-erro" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}">Erro</p>
             </div>
             <div class="campo">
                 <label for="email">E-mail</label>
-                <input type="email" th:field="*{email}" required autocomplete="email">
+                <input type="email" th:field="*{email}" required autocomplete="email"
+                       th:aria-invalid="${#fields.hasErrors('email')} ? 'true'"
+                       th:aria-describedby="${#fields.hasErrors('email')} ? 'email-erro'">
+                <p class="erro-campo" id="email-erro" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Erro</p>
+            </div>
+            <div class="campo">
+                <label for="cpf">CPF</label>
+                <input type="text" th:field="*{cpf}" required inputmode="numeric" maxlength="14" autocomplete="off"
+                       th:aria-invalid="${#fields.hasErrors('cpf')} ? 'true'"
+                       th:aria-describedby="${#fields.hasErrors('cpf')} ? 'cpf-dica cpf-erro' : 'cpf-dica'">
+                <p class="dica" id="cpf-dica">Com ou sem pontos. Ele é usado para identificar você nos pagamentos.</p>
+                <p class="erro-campo" id="cpf-erro" th:if="${#fields.hasErrors('cpf')}" th:errors="*{cpf}">Erro</p>
             </div>
             <div class="campo">
                 <label for="senha">Senha</label>
                 <input type="password" id="senha" name="senha" required minlength="6" maxlength="72"
-                       autocomplete="new-password" aria-describedby="senha-dica">
+                       autocomplete="new-password"
+                       th:aria-invalid="${#fields.hasErrors('senha')} ? 'true'"
+                       th:aria-describedby="${#fields.hasErrors('senha')} ? 'senha-dica senha-erro' : 'senha-dica'">
                 <p class="dica" id="senha-dica">De 6 a 72 caracteres</p>
+                <p class="erro-campo" id="senha-erro" th:if="${#fields.hasErrors('senha')}" th:errors="*{senha}">Erro</p>
             </div>
             <div class="acoes-formulario">
                 <button type="submit" class="botao">Criar conta</button>

@@ -21,13 +21,25 @@
                         th:selected="${categoria.id == categoriaSelecionada}">Categoria</option>
             </select>
         </div>
+        <div class="campo">
+            <label for="ordem">Ordenar por</label>
+            <select id="ordem" name="ordem">
+                <option value="nome" th:selected="${ordem == 'nome'}">Nome</option>
+                <option value="menor-preco" th:selected="${ordem == 'menor-preco'}">Menor preço</option>
+                <option value="maior-preco" th:selected="${ordem == 'maior-preco'}">Maior preço</option>
+                <option value="mais-vendidos" th:selected="${ordem == 'mais-vendidos'}">Mais vendidos</option>
+            </select>
+        </div>
         <button type="submit" class="botao">Filtrar</button>
         <a class="botao botao-secundario" th:href="@{/}"
-           th:if="${!#strings.isEmpty(busca) or categoriaSelecionada != null}">Limpar filtros</a>
+           th:if="${!#strings.isEmpty(busca) or categoriaSelecionada != null or ordem != 'nome'}">Limpar filtros</a>
     </form>
 
-    <ul class="grade-produtos" th:unless="${#lists.isEmpty(produtos)}">
-        <li th:each="produto : ${produtos}">
+    <p class="texto-suave" th:unless="${produtos.empty}"
+       th:text="${produtos.totalElements == 1} ? '1 produto encontrado' : |${produtos.totalElements} produtos encontrados|">8 produtos encontrados</p>
+
+    <ul class="grade-produtos" th:unless="${produtos.empty}">
+        <li th:each="produto : ${produtos.content}">
             <article class="card-produto">
                 <img alt="" th:src="@{${produto.imagemUrl ?: '/imagens/sem-imagem.svg'}}">
                 <div class="card-produto-corpo">
@@ -35,23 +47,31 @@
                     <p class="categoria-produto" th:text="${produto.categoria.nome}">Categoria</p>
                     <p class="preco" th:text="${#numbers.formatCurrency(produto.preco)}">R$ 0,00</p>
                     <p>
-                        <span class="selo selo-disponivel" th:if="${produto.estoque > 0}">Em estoque</span>
-                        <span class="selo selo-indisponivel" th:unless="${produto.estoque > 0}">Indisponível</span>
+                        <span class="selo selo-disponivel" th:if="${produto.disponivel}">Em estoque</span>
+                        <span class="selo selo-indisponivel" th:unless="${produto.disponivel}">Indisponível</span>
                     </p>
-                    <form th:if="${produto.estoque > 0}" th:action="@{/carrinho/adicionar}" method="post">
+                    <form th:if="${produto.disponivel}" th:action="@{/carrinho/adicionar}" method="post">
                         <input type="hidden" name="produtoId" th:value="${produto.id}">
                         <input type="hidden" name="quantidade" value="1">
                         <button type="submit" class="botao"
                                 th:aria-label="|Adicionar ao carrinho: ${produto.nome}|">Adicionar ao carrinho</button>
                     </form>
-                    <button class="botao" type="button" disabled th:unless="${produto.estoque > 0}"
+                    <button class="botao" type="button" disabled th:unless="${produto.disponivel}"
                             th:aria-label="|Indisponível: ${produto.nome}|">Indisponível</button>
                 </div>
             </article>
         </li>
     </ul>
 
-    <p class="vazio" th:if="${#lists.isEmpty(produtos)}">Nenhum produto encontrado.</p>
+    <p class="vazio" th:if="${produtos.empty}">Nenhum produto encontrado.</p>
+
+    <nav class="paginacao" aria-label="Páginas do catálogo" th:if="${produtos.totalPages > 1}">
+        <a class="botao botao-secundario" th:if="${produtos.hasPrevious()}"
+           th:href="@{/(busca=${busca}, categoriaId=${categoriaSelecionada}, ordem=${ordem}, pagina=${produtos.number})}">Página anterior</a>
+        <span th:text="|Página ${produtos.number + 1} de ${produtos.totalPages}|">Página 1 de 2</span>
+        <a class="botao botao-secundario" th:if="${produtos.hasNext()}"
+           th:href="@{/(busca=${busca}, categoriaId=${categoriaSelecionada}, ordem=${ordem}, pagina=${produtos.number + 2})}">Próxima página</a>
+    </nav>
 </main>
 <footer th:replace="~{fragmentos :: rodape}"></footer>
 </body>

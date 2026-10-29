@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos :: head(${cupom.id == null} ? 'Novo cupom' : 'Editar cupom')}"></head>
+<body>
+<header th:replace="~{fragmentos :: cabecalho('admin')}"></header>
+<main id="conteudo" class="container">
+    <nav th:replace="~{fragmentos :: menuAdmin('cupons')}"></nav>
+    <div th:replace="~{fragmentos :: mensagens}"></div>
+
+    <h1 th:text="${cupom.id == null} ? 'Novo cupom' : 'Editar cupom'">Novo cupom</h1>
+
+    <form class="formulario" method="post" th:action="@{/admin/cupons/salvar}" th:object="${cupom}">
+        <input type="hidden" th:field="*{id}">
+
+        <div class="campo">
+            <label for="codigo">Código</label>
+            <input type="text" th:field="*{codigo}" required maxlength="30" autocomplete="off"
+                   th:aria-invalid="${#fields.hasErrors('codigo')} ? 'true'"
+                   th:aria-describedby="${#fields.hasErrors('codigo')} ? 'codigo-dica codigo-erro' : 'codigo-dica'">
+            <p class="dica" id="codigo-dica">O cliente digita este código no carrinho. Ele é salvo em letras maiúsculas.</p>
+            <p class="erro-campo" id="codigo-erro" th:if="${#fields.hasErrors('codigo')}" th:errors="*{codigo}">Erro</p>
+        </div>
+
+        <div class="grade-campos">
+            <div class="campo">
+                <label for="tipo">Tipo do desconto</label>
+                <select th:field="*{tipo}" required
+                        th:aria-invalid="${#fields.hasErrors('tipo')} ? 'true'"
+                        th:aria-describedby="${#fields.hasErrors('tipo')} ? 'tipo-erro'">
+                    <option th:each="opcao : ${tipos}" th:value="${opcao}" th:text="${opcao.descricao}">Percentual</option>
+                </select>
+                <p class="erro-campo" id="tipo-erro" th:if="${#fields.hasErrors('tipo')}" th:errors="*{tipo}">Erro</p>
+            </div>
+
+            <div class="campo">
+                <label for="valor">Valor</label>
+                <input type="number" th:field="*{valor}" step="0.01" min="0.01" required
+                       th:aria-invalid="${#fields.hasErrors('valor')} ? 'true'"
+                       th:aria-describedby="${#fields.hasErrors('valor')} ? 'valor-dica valor-erro' : 'valor-dica'">
+                <p class="dica" id="valor-dica">Em % para percentual ou em R$ para valor fixo.</p>
+                <p class="erro-campo" id="valor-erro" th:if="${#fields.hasErrors('valor')}" th:errors="*{valor}">Erro</p>
+            </div>
+        </div>
+
+        <div class="campo">
+            <label for="validade">Válido até</label>
+            <input type="date" th:field="*{validade}" required
+                   th:aria-invalid="${#fields.hasErrors('validade')} ? 'true'"
+                   th:aria-describedby="${#fields.hasErrors('validade')} ? 'validade-erro'">
+            <p class="erro-campo" id="validade-erro" th:if="${#fields.hasErrors('validade')}" th:errors="*{validade}">Erro</p>
+        </div>
+
+        <div class="campo-marcar">
+            <input type="checkbox" th:field="*{ativo}">
+            <label th:for="${#ids.prev('ativo')}">Cupom ativo</label>
+        </div>
+
+        <p class="dica">Cada cliente pode usar o cupom uma vez só.</p>
+
+        <div class="acoes-formulario">
+            <button type="submit" class="botao">Salvar</button>
+            <a class="botao botao-secundario" th:href="@{/admin/cupons}">Cancelar</a>
+        </div>
+    </form>
+</main>
+<footer th:replace="~{fragmentos :: rodape}"></footer>
+</body>
+</html>

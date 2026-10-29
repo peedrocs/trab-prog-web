@@ -35,6 +35,9 @@ build/
 ### Config local (não versionar credenciais individuais) ###
 application-local.properties
 .env
+
+### Imagens enviadas pelo admin ###
+uploads/
 ### Materiais de apresentação (não versionados) ###
 slides/
 docs/imagens/*

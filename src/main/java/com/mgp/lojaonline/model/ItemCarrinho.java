@@ -24,4 +24,9 @@ public class ItemCarrinho {
     public BigDecimal getSubtotal() {
         return produto.getPreco().multiply(BigDecimal.valueOf(quantidade));
     }
+
+    // outro cliente pode ter comprado depois que o item entrou no carrinho
+    public boolean isFaltaEstoque() {
+        return quantidade > produto.getEstoque();
+    }
 }

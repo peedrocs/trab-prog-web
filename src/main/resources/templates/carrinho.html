@@ -7,11 +7,11 @@
     <div th:replace="~{fragmentos :: mensagens}"></div>
     <h1>Carrinho de compras</h1>
 
-    <p class="vazio" th:if="${#lists.isEmpty(itens)}">
+    <p class="vazio" th:if="${#lists.isEmpty(resumo.itens)}">
         Seu carrinho está vazio. <a th:href="@{/}">Ver produtos</a>
     </p>
 
-    <th:block th:unless="${#lists.isEmpty(itens)}">
+    <th:block th:unless="${#lists.isEmpty(resumo.itens)}">
         <div class="tabela-container">
             <table class="tabela">
                 <caption class="visualmente-oculto">Itens do carrinho</caption>
@@ -25,10 +25,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="item : ${itens}">
+                    <tr th:each="item : ${resumo.itens}">
                         <td>
                             <img class="miniatura" alt="" th:src="@{${item.produto.imagemUrl ?: '/imagens/sem-imagem.svg'}}">
                             <a th:href="@{/produtos/{id}(id=${item.produto.id})}" th:text="${item.produto.nome}">Produto</a>
+                            <p class="erro-campo" th:if="${item.faltaEstoque}"
+                               th:text="|Só restam ${item.produto.estoque} unidade(s). Diminua a quantidade para continuar.|">Só restam 2 unidades.</p>
                         </td>
                         <td class="numero" th:text="${#numbers.formatCurrency(item.produto.preco)}">R$ 0,00</td>
                         <td>
@@ -37,6 +39,7 @@
                                 <label class="visualmente-oculto" th:for="|quantidade-${item.produto.id}|"
                                        th:text="|Quantidade de ${item.produto.nome}|">Quantidade</label>
                                 <input type="number" class="campo-quantidade" name="quantidade" required min="1"
+                                       th:max="${item.produto.estoque}"
                                        th:id="|quantidade-${item.produto.id}|" th:value="${item.quantidade}">
                                 <button type="submit" class="botao botao-secundario botao-pequeno"
                                         th:aria-label="|Atualizar quantidade de ${item.produto.nome}|">Atualizar</button>
@@ -55,22 +58,37 @@
             </table>
         </div>
 
-        <section class="resumo" aria-labelledby="titulo-resumo">
-            <h2 id="titulo-resumo">Resumo</h2>
-            <dl>
-                <dt class="total">Total</dt>
-                <dd class="total" th:text="${#numbers.formatCurrency(total)}">R$ 0,00</dd>
-            </dl>
-            <p class="dica" sec:authorize="isAnonymous()">Entre na sua conta para finalizar a compra.</p>
-            <div class="acoes-formulario" sec:authorize="isAnonymous()">
-                <a class="botao" th:href="@{/login}">Entrar para finalizar</a>
-            </div>
-            <form th:action="@{/pedidos/finalizar}" method="post" sec:authorize="isAuthenticated()">
+        <div class="carrinho-rodape">
+            <section class="cupom" aria-labelledby="titulo-cupom">
+                <h2 id="titulo-cupom">Cupom de desconto</h2>
+                <form class="form-cupom" th:unless="${resumo.cupom}" th:action="@{/carrinho/cupom}" method="post">
+                    <div class="campo">
+                        <label for="codigo">Código do cupom</label>
+                        <input type="text" id="codigo" name="codigo" required maxlength="30" autocomplete="off">
+                    </div>
+                    <button type="submit" class="botao botao-secundario">Aplicar</button>
+                </form>
+                <th:block th:if="${resumo.cupom}">
+                    <p>
+                        Cupom <strong th:text="${resumo.cupom.codigo}">CUPOM</strong> aplicado:
+                        <span th:text="${resumo.cupom.descricaoDesconto}">10%</span> de desconto.
+                    </p>
+                    <form th:action="@{/carrinho/cupom/remover}" method="post">
+                        <button type="submit" class="botao botao-secundario botao-pequeno">Remover cupom</button>
+                    </form>
+                </th:block>
+            </section>
+
+            <section class="resumo" aria-labelledby="titulo-resumo">
+                <h2 id="titulo-resumo">Resumo</h2>
+                <dl th:replace="~{fragmentos :: valores(${resumo})}"></dl>
+                <p class="dica" th:if="${resumo.frete > 0}">Frete grátis em compras a partir de R$ 150,00.</p>
+                <p class="dica" sec:authorize="!hasAnyRole('USER', 'ADMIN')">Para finalizar, você vai entrar na sua conta.</p>
                 <div class="acoes-formulario">
-                    <button type="submit" class="botao">Finalizar compra</button>
+                    <a class="botao" th:href="@{/checkout}">Finalizar compra</a>
                 </div>
-            </form>
-        </section>
+            </section>
+        </div>
     </th:block>
 </main>
 <footer th:replace="~{fragmentos :: rodape}"></footer>

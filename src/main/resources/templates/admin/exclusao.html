@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos :: head('Exclusão')}"></head>
+<body>
+<header th:replace="~{fragmentos :: cabecalho('admin')}"></header>
+<main id="conteudo" class="container">
+    <nav th:replace="~{fragmentos :: menuAdmin('exclusao')}"></nav>
+    <div th:replace="~{fragmentos :: mensagens}"></div>
+
+    <h1>Exclusão</h1>
+    <p class="dica">Escolha o tipo de registro, busque e confirme a exclusão aqui mesmo.</p>
+
+    <form class="filtros" th:action="@{/admin/exclusao}" method="get" role="search" aria-label="Buscar registro para excluir">
+        <div class="campo">
+            <label for="tipo">Tipo</label>
+            <select id="tipo" name="tipo" required>
+                <option value="">Escolha o tipo</option>
+                <option th:each="opcao : ${tipos}" th:value="${opcao}" th:text="${opcao.descricao}"
+                        th:selected="${opcao == tipo}">Produto</option>
+            </select>
+        </div>
+        <div class="campo">
+            <label for="busca">Nome, código ou e-mail</label>
+            <input type="search" id="busca" name="busca" th:value="${busca}">
+        </div>
+        <button type="submit" class="botao">Buscar</button>
+    </form>
+
+    <section class="confirmacao" id="confirmacao" tabindex="-1" th:if="${selecionado}" aria-labelledby="titulo-confirmacao">
+        <h2 id="titulo-confirmacao" th:text="|${tipo.descricao}: ${selecionado.nome}|">Produto: Caneta azul</h2>
+        <p th:text="${selecionado.detalhe}">Detalhes do registro</p>
+
+        <th:block th:if="${selecionado.podeExcluir()}">
+            <p>A exclusão não pode ser desfeita.</p>
+            <form th:action="@{/admin/exclusao/excluir}" method="post">
+                <input type="hidden" name="tipo" th:value="${tipo}">
+                <input type="hidden" name="id" th:value="${selecionado.id}">
+                <input type="hidden" name="busca" th:value="${busca}">
+                <div class="acoes-formulario">
+                    <button type="submit" class="botao botao-perigo">Confirmar exclusão</button>
+                    <a class="botao botao-secundario" th:href="@{/admin/exclusao(tipo=${tipo}, busca=${busca})}">Cancelar</a>
+                </div>
+            </form>
+        </th:block>
+
+        <th:block th:unless="${selecionado.podeExcluir()}">
+            <p class="alerta alerta-erro" th:text="${selecionado.motivoBloqueio}">Este registro tem vínculos.</p>
+            <form th:if="${selecionado.podeDesativar}" th:action="@{/admin/exclusao/desativar}" method="post">
+                <input type="hidden" name="tipo" th:value="${tipo}">
+                <input type="hidden" name="id" th:value="${selecionado.id}">
+                <input type="hidden" name="busca" th:value="${busca}">
+                <div class="acoes-formulario">
+                    <button type="submit" class="botao">Desativar</button>
+                    <a class="botao botao-secundario" th:href="@{/admin/exclusao(tipo=${tipo}, busca=${busca})}">Cancelar</a>
+                </div>
+            </form>
+            <p class="dica" th:unless="${selecionado.ativo}">Este registro já está desativado.</p>
+        </th:block>
+    </section>
+
+    <th:block th:if="${tipo != null}">
+        <h2>Resultados</h2>
+        <p class="vazio" th:if="${#lists.isEmpty(resultados)}">Nenhum registro encontrado.</p>
+        <div class="tabela-container" th:unless="${#lists.isEmpty(resultados)}">
+            <table class="tabela">
+                <caption class="visualmente-oculto">Registros encontrados</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Detalhes</th>
+                        <th scope="col">Situação</th>
+                        <th scope="col">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="registro : ${resultados}">
+                        <td th:text="${registro.nome}">Nome</td>
+                        <td th:text="${registro.detalhe}">Detalhes</td>
+                        <td th:text="${registro.ativo} ? 'Ativo' : 'Desativado'">Ativo</td>
+                        <td>
+                            <a class="botao botao-perigo botao-pequeno"
+                               th:href="@{/admin/exclusao#confirmacao(tipo=${tipo}, busca=${busca}, id=${registro.id})}"
+                               th:aria-label="|Excluir ${registro.nome}|">Excluir</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </th:block>
+</main>
+<footer th:replace="~{fragmentos :: rodape}"></footer>
+</body>
+</html>

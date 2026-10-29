@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos :: head('Pagamentos')}"></head>
+<body>
+<header th:replace="~{fragmentos :: cabecalho('admin')}"></header>
+<main id="conteudo" class="container">
+    <nav th:replace="~{fragmentos :: menuAdmin('pagamentos')}"></nav>
+    <div th:replace="~{fragmentos :: mensagens}"></div>
+
+    <h1>Pagamentos</h1>
+    <p class="dica">Todos os pagamentos criados no Mercado Pago, do mais novo para o mais antigo.</p>
+
+    <p class="vazio" th:if="${#lists.isEmpty(pagamentos)}">Nenhum pagamento registrado.</p>
+
+    <div class="tabela-container" th:unless="${#lists.isEmpty(pagamentos)}">
+        <table class="tabela">
+            <caption class="visualmente-oculto">Pagamentos registrados</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Data</th>
+                    <th scope="col">Pedido</th>
+                    <th scope="col">Id no Mercado Pago</th>
+                    <th scope="col">Forma</th>
+                    <th scope="col" class="numero">Valor</th>
+                    <th scope="col">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="pagamento : ${pagamentos}">
+                    <td th:text="${#temporals.format(pagamento.data, 'dd/MM/yyyy HH:mm')}">01/01/2026 10:00</td>
+                    <td><a th:href="@{/admin/pedidos/{id}(id=${pagamento.pedido.id})}" th:text="|#${pagamento.pedido.id}|">#1</a></td>
+                    <td th:text="${pagamento.idMercadoPago}">123</td>
+                    <td th:text="${pagamento.forma.descricao}">Pix</td>
+                    <td class="numero" th:text="${#numbers.formatCurrency(pagamento.valor)}">R$ 0,00</td>
+                    <td th:text="${pagamento.statusDescricao}">Aprovado</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+<footer th:replace="~{fragmentos :: rodape}"></footer>
+</body>
+</html>

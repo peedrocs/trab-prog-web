@@ -7,7 +7,11 @@
     <section class="formulario formulario-centralizado">
         <h1>Entrar</h1>
         <div th:replace="~{fragmentos :: mensagens}"></div>
-        <p class="alerta alerta-erro" role="alert" th:if="${param.error}">E-mail ou senha inválidos.</p>
+        <p class="alerta alerta-erro" role="alert" th:if="${param.error}">E-mail ou senha inválidos, ou conta desativada.</p>
+        <p class="alerta alerta-erro" role="alert" th:if="${param.erroGoogle}">Não foi possível entrar com o Google.</p>
+        <p class="alerta alerta-erro" role="alert" th:if="${param.tentativas}">
+            Você errou o código muitas vezes. Entre de novo para receber um código novo.
+        </p>
         <p class="alerta alerta-sucesso" role="status" th:if="${param.logout}">Você saiu da sua conta.</p>
 
         <form th:action="@{/login}" method="post">
@@ -17,12 +21,19 @@
             </div>
             <div class="campo">
                 <label for="senha">Senha</label>
-                <input type="password" id="senha" name="senha" autocomplete="current-password" required>
+                <input type="password" id="senha" name="senha" autocomplete="current-password" required
+                       aria-describedby="senha-dica">
+                <p class="dica" id="senha-dica">Depois da senha, enviamos um código de 6 dígitos para o seu e-mail.</p>
             </div>
             <div class="acoes-formulario">
                 <button type="submit" class="botao">Entrar</button>
             </div>
         </form>
+
+        <p><a th:href="@{/senha/esqueci}">Esqueci minha senha</a></p>
+
+        <div class="separador"><span>ou</span></div>
+        <p><a class="botao botao-secundario botao-largo" th:href="@{/oauth2/authorization/google}">Entrar com Google</a></p>
 
         <p>Não tem conta? <a th:href="@{/cadastro}">Cadastre-se</a></p>
     </section>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos :: head('Relatórios')}"></head>
+<body>
+<header th:replace="~{fragmentos :: cabecalho('admin')}"></header>
+<main id="conteudo" class="container">
+    <nav th:replace="~{fragmentos :: menuAdmin('relatorios')}"></nav>
+    <div th:replace="~{fragmentos :: mensagens}"></div>
+
+    <h1>Produtos mais vendidos</h1>
+
+    <form class="filtros" th:action="@{/admin/relatorios}" method="get" aria-label="Escolher o período">
+        <div class="campo">
+            <label for="inicio">De</label>
+            <input type="date" id="inicio" name="inicio" th:value="${inicio}" required>
+        </div>
+        <div class="campo">
+            <label for="fim">Até</label>
+            <input type="date" id="fim" name="fim" th:value="${fim}" required>
+        </div>
+        <button type="submit" class="botao">Ver período</button>
+    </form>
+
+    <p>
+        Faturamento no período: <strong th:text="${#numbers.formatCurrency(faturamento)}">R$ 0,00</strong>.
+        <span class="dica">Contam só os pedidos pagos.</span>
+    </p>
+
+    <div class="painel-tabelas">
+        <section aria-labelledby="titulo-quantidade">
+            <h2 id="titulo-quantidade">Top 10 por quantidade</h2>
+            <p class="vazio" th:if="${#lists.isEmpty(porQuantidade)}">Nenhuma venda no período.</p>
+            <th:block th:unless="${#lists.isEmpty(porQuantidade)}">
+                <div class="tabela-container">
+                    <table class="tabela">
+                        <caption class="visualmente-oculto">Os 10 produtos com mais unidades vendidas</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Produto</th>
+                                <th scope="col" class="numero">Unidades</th>
+                                <th scope="col" class="numero">Faturamento</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="produto : ${porQuantidade}">
+                                <td th:text="${produto.nome}">Produto</td>
+                                <td class="numero" th:text="${produto.quantidade}">0</td>
+                                <td class="numero" th:text="${#numbers.formatCurrency(produto.faturamento)}">R$ 0,00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    <a class="botao botao-secundario botao-pequeno"
+                       th:href="@{/admin/relatorios/mais-vendidos.csv(inicio=${inicio}, fim=${fim}, ordem='quantidade')}">Exportar em CSV</a>
+                </p>
+            </th:block>
+        </section>
+
+        <section aria-labelledby="titulo-faturamento">
+            <h2 id="titulo-faturamento">Top 10 por faturamento</h2>
+            <p class="vazio" th:if="${#lists.isEmpty(porFaturamento)}">Nenhuma venda no período.</p>
+            <th:block th:unless="${#lists.isEmpty(porFaturamento)}">
+                <div class="tabela-container">
+                    <table class="tabela">
+                        <caption class="visualmente-oculto">Os 10 produtos que mais faturaram</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Produto</th>
+                                <th scope="col" class="numero">Faturamento</th>
+                                <th scope="col" class="numero">Unidades</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="produto : ${porFaturamento}">
+                                <td th:text="${produto.nome}">Produto</td>
+                                <td class="numero" th:text="${#numbers.formatCurrency(produto.faturamento)}">R$ 0,00</td>
+                                <td class="numero" th:text="${produto.quantidade}">0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    <a class="botao botao-secundario botao-pequeno"
+                       th:href="@{/admin/relatorios/mais-vendidos.csv(inicio=${inicio}, fim=${fim}, ordem='faturamento')}">Exportar em CSV</a>
+                </p>
+            </th:block>
+        </section>
+    </div>
+</main>
+<footer th:replace="~{fragmentos :: rodape}"></footer>
+</body>
+</html>

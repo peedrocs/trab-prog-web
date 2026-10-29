@@ -19,7 +19,7 @@
             <summary><span aria-hidden="true">☰</span> Menu</summary>
             <nav aria-label="Menu principal">
                 <ul class="menu">
-                    <li class="usuario-logado" sec:authorize="isAuthenticated()">
+                    <li class="usuario-logado" sec:authorize="hasAnyRole('USER', 'ADMIN')">
                         Conectado como <span sec:authentication="name">usuario@email.com</span>
                     </li>
                     <li><a th:href="@{/}" th:aria-current="${paginaAtual == 'catalogo'} ? 'true'">Catálogo</a></li>
@@ -29,13 +29,16 @@
                             <span class="contador" th:if="${session.carrinho != null and !session.carrinho.isEmpty()}">(<span th:text="${#aggregates.sum(session.carrinho.values())}">0</span><span class="visualmente-oculto" th:text="${#aggregates.sum(session.carrinho.values()) == 1} ? ' item' : ' itens'"> itens</span>)</span>
                         </a>
                     </li>
-                    <li sec:authorize="isAuthenticated()">
+                    <li sec:authorize="hasAnyRole('USER', 'ADMIN')">
                         <a th:href="@{/pedidos}" th:aria-current="${paginaAtual == 'pedidos'} ? 'true'">Meus pedidos</a>
+                    </li>
+                    <li sec:authorize="hasAnyRole('USER', 'ADMIN')">
+                        <a th:href="@{/conta}" th:aria-current="${paginaAtual == 'conta'} ? 'true'">Minha conta</a>
                     </li>
                     <li sec:authorize="hasRole('ADMIN')">
                         <a th:href="@{/admin}" th:aria-current="${paginaAtual == 'admin'} ? 'true'">Administração</a>
                     </li>
-                    <li sec:authorize="isAnonymous()">
+                    <li sec:authorize="!hasAnyRole('USER', 'ADMIN')">
                         <a th:href="@{/login}" th:aria-current="${paginaAtual == 'login'} ? 'true'">Entrar</a>
                     </li>
                     <li sec:authorize="isAuthenticated()">
@@ -59,8 +62,12 @@
         <li><a th:href="@{/admin}" th:aria-current="${secao == 'painel'} ? 'true'">Painel</a></li>
         <li><a th:href="@{/admin/produtos}" th:aria-current="${secao == 'produtos'} ? 'true'">Produtos</a></li>
         <li><a th:href="@{/admin/categorias}" th:aria-current="${secao == 'categorias'} ? 'true'">Categorias</a></li>
+        <li><a th:href="@{/admin/cupons}" th:aria-current="${secao == 'cupons'} ? 'true'">Cupons</a></li>
         <li><a th:href="@{/admin/pedidos}" th:aria-current="${secao == 'pedidos'} ? 'true'">Pedidos</a></li>
+        <li><a th:href="@{/admin/pagamentos}" th:aria-current="${secao == 'pagamentos'} ? 'true'">Pagamentos</a></li>
         <li><a th:href="@{/admin/usuarios}" th:aria-current="${secao == 'usuarios'} ? 'true'">Usuários</a></li>
+        <li><a th:href="@{/admin/relatorios}" th:aria-current="${secao == 'relatorios'} ? 'true'">Relatórios</a></li>
+        <li><a th:href="@{/admin/exclusao}" th:aria-current="${secao == 'exclusao'} ? 'true'">Exclusão</a></li>
     </ul>
 </nav>
 
@@ -85,6 +92,93 @@
         </tbody>
     </table>
 </div>
+
+<!-- serve tanto para o pedido quanto para o resumo do carrinho, que tem os mesmos campos -->
+<dl th:fragment="valores(compra)">
+    <dt>Produtos</dt>
+    <dd th:text="${#numbers.formatCurrency(compra.subtotal)}">R$ 0,00</dd>
+    <th:block th:if="${compra.desconto > 0}">
+        <dt th:text="${compra.cupom != null} ? |Desconto (cupom ${compra.cupom.codigo})| : 'Desconto'">Desconto</dt>
+        <dd th:text="|- ${#numbers.formatCurrency(compra.desconto)}|">- R$ 0,00</dd>
+    </th:block>
+    <dt>Frete</dt>
+    <dd th:text="${compra.frete == 0} ? 'Grátis' : ${#numbers.formatCurrency(compra.frete)}">R$ 0,00</dd>
+    <dt class="total">Total</dt>
+    <dd class="total" th:text="${#numbers.formatCurrency(compra.total)}">R$ 0,00</dd>
+</dl>
+
+<ol th:fragment="linhaDoTempo(pedido)" class="linha-do-tempo">
+    <li th:each="etapa : ${pedido.historico}">
+        <strong th:text="${etapa.status.descricao}">Status</strong>
+        <time th:datetime="${#temporals.formatISO(etapa.data)}"
+              th:text="${#temporals.format(etapa.data, 'dd/MM/yyyy HH:mm')}">01/01/2026 10:00</time>
+    </li>
+</ol>
+
+<!-- usado dentro de um form com th:object que tenha o campo endereco -->
+<fieldset th:fragment="camposEndereco" class="grupo-campos">
+    <legend>Endereço de entrega</legend>
+
+    <div class="campo">
+        <label for="cep">CEP</label>
+        <input type="text" id="cep" th:field="*{endereco.cep}" inputmode="numeric" maxlength="9"
+               autocomplete="postal-code"
+               th:aria-invalid="${#fields.hasErrors('endereco.cep')} ? 'true'"
+               th:aria-describedby="${#fields.hasErrors('endereco.cep')} ? 'cep-dica cep-aviso cep-erro' : 'cep-dica cep-aviso'">
+        <p class="dica" id="cep-dica">Ao digitar o CEP, a rua, o bairro e a cidade são preenchidos sozinhos.</p>
+        <p class="dica" id="cep-aviso" aria-live="polite"></p>
+        <p class="erro-campo" id="cep-erro" th:if="${#fields.hasErrors('endereco.cep')}" th:errors="*{endereco.cep}">Erro</p>
+    </div>
+
+    <div class="campo">
+        <label for="rua">Rua</label>
+        <input type="text" id="rua" th:field="*{endereco.rua}" maxlength="150" autocomplete="address-line1"
+               th:aria-invalid="${#fields.hasErrors('endereco.rua')} ? 'true'"
+               th:aria-describedby="${#fields.hasErrors('endereco.rua')} ? 'rua-erro'">
+        <p class="erro-campo" id="rua-erro" th:if="${#fields.hasErrors('endereco.rua')}" th:errors="*{endereco.rua}">Erro</p>
+    </div>
+
+    <div class="grade-campos">
+        <div class="campo">
+            <label for="numero">Número</label>
+            <input type="text" id="numero" th:field="*{endereco.numero}" maxlength="20"
+                   th:aria-invalid="${#fields.hasErrors('endereco.numero')} ? 'true'"
+                   th:aria-describedby="${#fields.hasErrors('endereco.numero')} ? 'numero-erro'">
+            <p class="erro-campo" id="numero-erro" th:if="${#fields.hasErrors('endereco.numero')}" th:errors="*{endereco.numero}">Erro</p>
+        </div>
+
+        <div class="campo">
+            <label for="complemento">Complemento (opcional)</label>
+            <input type="text" id="complemento" th:field="*{endereco.complemento}" maxlength="100" autocomplete="address-line2">
+        </div>
+    </div>
+
+    <div class="campo">
+        <label for="bairro">Bairro</label>
+        <input type="text" id="bairro" th:field="*{endereco.bairro}" maxlength="100"
+               th:aria-invalid="${#fields.hasErrors('endereco.bairro')} ? 'true'"
+               th:aria-describedby="${#fields.hasErrors('endereco.bairro')} ? 'bairro-erro'">
+        <p class="erro-campo" id="bairro-erro" th:if="${#fields.hasErrors('endereco.bairro')}" th:errors="*{endereco.bairro}">Erro</p>
+    </div>
+
+    <div class="grade-campos">
+        <div class="campo">
+            <label for="cidade">Cidade</label>
+            <input type="text" id="cidade" th:field="*{endereco.cidade}" maxlength="100" autocomplete="address-level2"
+                   th:aria-invalid="${#fields.hasErrors('endereco.cidade')} ? 'true'"
+                   th:aria-describedby="${#fields.hasErrors('endereco.cidade')} ? 'cidade-erro'">
+            <p class="erro-campo" id="cidade-erro" th:if="${#fields.hasErrors('endereco.cidade')}" th:errors="*{endereco.cidade}">Erro</p>
+        </div>
+
+        <div class="campo">
+            <label for="uf">UF</label>
+            <input type="text" id="uf" th:field="*{endereco.uf}" maxlength="2" autocomplete="address-level1"
+                   th:aria-invalid="${#fields.hasErrors('endereco.uf')} ? 'true'"
+                   th:aria-describedby="${#fields.hasErrors('endereco.uf')} ? 'uf-erro'">
+            <p class="erro-campo" id="uf-erro" th:if="${#fields.hasErrors('endereco.uf')}" th:errors="*{endereco.uf}">Erro</p>
+        </div>
+    </div>
+</fieldset>
 
 <footer th:fragment="rodape" class="rodape">
     <div class="container">

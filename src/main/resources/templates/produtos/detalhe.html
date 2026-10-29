@@ -14,15 +14,18 @@
             <p class="categoria-produto" th:text="${produto.categoria.nome}">Categoria</p>
             <h1 id="nome-produto" th:text="${produto.nome}">Nome do produto</h1>
             <p class="preco" th:text="${#numbers.formatCurrency(produto.preco)}">R$ 0,00</p>
+            <p class="texto-suave" th:if="${media != null}">
+                Nota média <span th:text="${#numbers.formatDecimal(media, 1, 1, 'COMMA')}">4,5</span> de 5
+            </p>
             <p>
-                <span class="selo selo-disponivel" th:if="${produto.estoque > 0}">Em estoque</span>
-                <span class="selo selo-indisponivel" th:unless="${produto.estoque > 0}">Indisponível</span>
-                <span class="texto-suave" th:if="${produto.estoque > 0}"
+                <span class="selo selo-disponivel" th:if="${produto.disponivel}">Em estoque</span>
+                <span class="selo selo-indisponivel" th:unless="${produto.disponivel}">Indisponível</span>
+                <span class="texto-suave" th:if="${produto.disponivel}"
                       th:text="${produto.estoque == 1} ? '(1 unidade)' : |(${produto.estoque} unidades)|">(10 unidades)</span>
             </p>
             <p th:unless="${#strings.isEmpty(produto.descricao)}" th:text="${produto.descricao}">Descrição do produto</p>
 
-            <form class="form-carrinho" th:if="${produto.estoque > 0}" th:action="@{/carrinho/adicionar}" method="post">
+            <form class="form-carrinho" th:if="${produto.disponivel}" th:action="@{/carrinho/adicionar}" method="post">
                 <input type="hidden" name="produtoId" th:value="${produto.id}">
                 <div class="campo">
                     <label for="quantidade">Quantidade</label>
@@ -31,11 +34,55 @@
                 <button type="submit" class="botao">Adicionar ao carrinho</button>
             </form>
 
-            <th:block th:unless="${produto.estoque > 0}">
+            <th:block th:unless="${produto.disponivel}">
                 <button class="botao" type="button" disabled>Indisponível</button>
                 <p class="texto-suave">Este produto está sem estoque no momento.</p>
             </th:block>
         </div>
+    </section>
+
+    <section class="avaliacoes" aria-labelledby="titulo-avaliacoes">
+        <h2 id="titulo-avaliacoes">Avaliações</h2>
+
+        <p th:if="${media != null}">
+            Nota média <strong th:text="${#numbers.formatDecimal(media, 1, 1, 'COMMA')}">4,5</strong> de 5,
+            <span th:text="${#lists.size(avaliacoes) == 1} ? 'com 1 avaliação.' : |com ${#lists.size(avaliacoes)} avaliações.|">com 2 avaliações.</span>
+        </p>
+        <p class="texto-suave" th:if="${#lists.isEmpty(avaliacoes)}">Este produto ainda não tem avaliações.</p>
+
+        <form th:if="${podeAvaliar}" class="formulario" th:action="@{/avaliacoes}" method="post"
+              aria-labelledby="titulo-avaliar">
+            <h3 id="titulo-avaliar">Avalie este produto</h3>
+            <input type="hidden" name="produtoId" th:value="${produto.id}">
+            <div class="campo">
+                <label for="nota">Nota</label>
+                <select id="nota" name="nota" required>
+                    <option value="">Escolha uma nota</option>
+                    <option value="5">5 (ótimo)</option>
+                    <option value="4">4 (bom)</option>
+                    <option value="3">3 (regular)</option>
+                    <option value="2">2 (ruim)</option>
+                    <option value="1">1 (péssimo)</option>
+                </select>
+            </div>
+            <div class="campo">
+                <label for="comentario">Comentário (opcional)</label>
+                <textarea id="comentario" name="comentario" rows="3" maxlength="500"></textarea>
+            </div>
+            <div class="acoes-formulario">
+                <button type="submit" class="botao">Enviar avaliação</button>
+            </div>
+        </form>
+
+        <ul class="lista-avaliacoes" th:unless="${#lists.isEmpty(avaliacoes)}">
+            <li th:each="avaliacao : ${avaliacoes}">
+                <p>
+                    <strong th:text="|Nota ${avaliacao.nota} de 5|">Nota 5 de 5</strong>
+                    <span class="texto-suave" th:text="|por ${avaliacao.usuario.primeiroNome} em ${#temporals.format(avaliacao.data, 'dd/MM/yyyy')}|">por Ana em 01/01/2026</span>
+                </p>
+                <p th:unless="${#strings.isEmpty(avaliacao.comentario)}" th:text="${avaliacao.comentario}">Comentário</p>
+            </li>
+        </ul>
     </section>
 </main>
 <footer th:replace="~{fragmentos :: rodape}"></footer>

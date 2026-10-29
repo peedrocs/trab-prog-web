@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos :: head('Código de acesso')}"></head>
+<body>
+<header th:replace="~{fragmentos :: cabecalho('login')}"></header>
+<main id="conteudo" class="container">
+    <section class="formulario formulario-centralizado">
+        <h1>Código de acesso</h1>
+        <div th:replace="~{fragmentos :: mensagens}"></div>
+
+        <p>
+            Enviamos um código de 6 dígitos para <strong th:text="${email}">email@exemplo.com</strong>.
+            Ele vale por 10 minutos.
+        </p>
+
+        <form th:action="@{/login/codigo}" method="post">
+            <div class="campo">
+                <label for="codigo">Código</label>
+                <input type="text" id="codigo" name="codigo" required inputmode="numeric" pattern="[0-9]{6}"
+                       maxlength="6" autocomplete="one-time-code" aria-describedby="codigo-dica">
+                <p class="dica" id="codigo-dica">Só os 6 números, sem espaços.</p>
+            </div>
+            <div class="acoes-formulario">
+                <button type="submit" class="botao">Entrar</button>
+            </div>
+        </form>
+
+        <div class="acoes-formulario">
+            <form th:action="@{/login/codigo/reenviar}" method="post">
+                <button type="submit" class="botao botao-secundario">Enviar outro código</button>
+            </form>
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="botao botao-secundario">Cancelar</button>
+            </form>
+        </div>
+    </section>
+</main>
+<footer th:replace="~{fragmentos :: rodape}"></footer>
+</body>
+</html>

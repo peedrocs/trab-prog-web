@@ -18,6 +18,7 @@
                 <tr>
                     <th scope="col">Pedido</th>
                     <th scope="col">Data</th>
+                    <th scope="col">Pagamento</th>
                     <th scope="col">Status</th>
                     <th scope="col" class="numero">Total</th>
                     <th scope="col">Ações</th>
@@ -27,11 +28,17 @@
                 <tr th:each="pedido : ${pedidos}">
                     <td th:text="|#${pedido.id}|">#1</td>
                     <td th:text="${#temporals.format(pedido.data, 'dd/MM/yyyy HH:mm')}">01/01/2026 10:00</td>
+                    <td th:text="${pedido.formaPagamento.descricao}">Pix</td>
                     <td><span th:class="|selo status-${pedido.status}|" th:text="${pedido.status.descricao}">Status</span></td>
                     <td class="numero" th:text="${#numbers.formatCurrency(pedido.total)}">R$ 0,00</td>
                     <td>
-                        <a class="botao botao-secundario botao-pequeno" th:href="@{/pedidos/{id}(id=${pedido.id})}"
-                           th:aria-label="|Ver detalhes do pedido ${pedido.id}|">Ver detalhes</a>
+                        <div class="acoes">
+                            <a class="botao botao-pequeno" th:if="${pedido.status.name() == 'AGUARDANDO_PAGAMENTO'}"
+                               th:href="@{/pedidos/{id}/pagamento(id=${pedido.id})}"
+                               th:aria-label="|Pagar o pedido ${pedido.id}|">Pagar</a>
+                            <a class="botao botao-secundario botao-pequeno" th:href="@{/pedidos/{id}(id=${pedido.id})}"
+                               th:aria-label="|Ver detalhes do pedido ${pedido.id}|">Ver detalhes</a>
+                        </div>
                     </td>
                 </tr>
             </tbody>

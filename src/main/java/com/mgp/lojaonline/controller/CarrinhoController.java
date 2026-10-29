@@ -1,7 +1,8 @@
 package com.mgp.lojaonline.controller;
 
-import com.mgp.lojaonline.model.ItemCarrinho;
-import com.mgp.lojaonline.repository.ProdutoRepository;
+import com.mgp.lojaonline.exception.RegraNegocioException;
+import com.mgp.lojaonline.service.CarrinhoService;
+import com.mgp.lojaonline.service.UsuarioService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,67 +10,72 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.security.Principal;
 
 @Controller
 @RequestMapping("/carrinho")
 public class CarrinhoController {
 
-    private final ProdutoRepository produtoRepository;
+    private final CarrinhoService carrinhoService;
+    private final UsuarioService usuarioService;
 
-    public CarrinhoController(ProdutoRepository produtoRepository) {
-        this.produtoRepository = produtoRepository;
+    public CarrinhoController(CarrinhoService carrinhoService, UsuarioService usuarioService) {
+        this.carrinhoService = carrinhoService;
+        this.usuarioService = usuarioService;
     }
 
     @GetMapping
-    public String carrinho(HttpSession sessao, Model model) {
-        List<ItemCarrinho> itens = new ArrayList<>();
-        BigDecimal total = BigDecimal.ZERO;
-
-        for (Map.Entry<Long, Integer> entrada : carrinho(sessao).entrySet()) {
-            produtoRepository.findById(entrada.getKey())
-                    .ifPresent(produto -> itens.add(new ItemCarrinho(produto, entrada.getValue())));
-        }
-        for (ItemCarrinho item : itens) {
-            total = total.add(item.getSubtotal());
-        }
-
-        model.addAttribute("itens", itens);
-        model.addAttribute("total", total);
+    public String carrinho(HttpSession sessao, Principal principal, Model model) {
+        model.addAttribute("resumo", carrinhoService.resumo(sessao, usuarioService.usuarioLogado(principal)));
         return "carrinho";
     }
 
     @PostMapping("/adicionar")
     public String adicionar(@RequestParam Long produtoId, @RequestParam(defaultValue = "1") int quantidade,
-                            HttpSession sessao) {
-        carrinho(sessao).merge(produtoId, quantidade, Integer::sum);
+                            HttpSession sessao, RedirectAttributes atributos) {
+        try {
+            carrinhoService.adicionar(sessao, produtoId, quantidade);
+            atributos.addFlashAttribute("sucesso", "Produto adicionado ao carrinho");
+        } catch (RegraNegocioException e) {
+            atributos.addFlashAttribute("erro", e.getMessage());
+        }
         return "redirect:/carrinho";
     }
 
     @PostMapping("/atualizar")
-    public String atualizar(@RequestParam Long produtoId, @RequestParam int quantidade, HttpSession sessao) {
-        carrinho(sessao).put(produtoId, quantidade);
+    public String atualizar(@RequestParam Long produtoId, @RequestParam int quantidade, HttpSession sessao,
+                            RedirectAttributes atributos) {
+        try {
+            carrinhoService.atualizar(sessao, produtoId, quantidade);
+        } catch (RegraNegocioException e) {
+            atributos.addFlashAttribute("erro", e.getMessage());
+        }
         return "redirect:/carrinho";
     }
 
     @PostMapping("/remover")
     public String remover(@RequestParam Long produtoId, HttpSession sessao) {
-        carrinho(sessao).remove(produtoId);
+        carrinhoService.remover(sessao, produtoId);
         return "redirect:/carrinho";
     }
 
-    // o carrinho e um mapa produto -> quantidade guardado na sessao
-    static Map<Long, Integer> carrinho(HttpSession sessao) {
-        Map<Long, Integer> carrinho = (Map<Long, Integer>) sessao.getAttribute("carrinho");
-        if (carrinho == null) {
-            carrinho = new LinkedHashMap<>();
-            sessao.setAttribute("carrinho", carrinho);
+    @PostMapping("/cupom")
+    public String aplicarCupom(@RequestParam String codigo, HttpSession sessao, Principal principal,
+                               RedirectAttributes atributos) {
+        try {
+            carrinhoService.aplicarCupom(sessao, codigo, usuarioService.usuarioLogado(principal));
+            atributos.addFlashAttribute("sucesso", "Cupom aplicado");
+        } catch (RegraNegocioException e) {
+            atributos.addFlashAttribute("erro", e.getMessage());
         }
-        return carrinho;
+        return "redirect:/carrinho";
+    }
+
+    @PostMapping("/cupom/remover")
+    public String removerCupom(HttpSession sessao) {
+        carrinhoService.removerCupom(sessao);
+        return "redirect:/carrinho";
     }
 }

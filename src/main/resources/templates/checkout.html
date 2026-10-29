@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos :: head('Finalizar compra')}"></head>
+<body>
+<header th:replace="~{fragmentos :: cabecalho('carrinho')}"></header>
+<main id="conteudo" class="container">
+    <div th:replace="~{fragmentos :: mensagens}"></div>
+
+    <p><a th:href="@{/carrinho}">Voltar ao carrinho</a></p>
+    <h1>Finalizar compra</h1>
+
+    <form class="checkout" th:action="@{/checkout}" th:object="${dados}" method="post">
+        <div class="formulario">
+            <fieldset th:replace="~{fragmentos :: camposEndereco}"></fieldset>
+
+            <fieldset class="grupo-campos">
+                <legend>Forma de pagamento</legend>
+                <div class="opcao-pagamento" th:each="forma : ${formas}">
+                    <input type="radio" th:field="*{formaPagamento}" th:value="${forma}"
+                           th:aria-describedby="|dica-${forma}|">
+                    <label th:for="${#ids.prev('formaPagamento')}" th:text="${forma.descricao}">Pix</label>
+                    <p class="dica" th:id="|dica-${forma}|" th:switch="${forma.name()}">
+                        <span th:case="'PIX'">QR Code e código copia e cola aqui na loja. Pague em até 30 minutos.</span>
+                        <span th:case="'CARTAO'">Você digita os dados do cartão na página segura do Mercado Pago. Pague em até 30 minutos.</span>
+                        <span th:case="'BOLETO'">Boleto do Mercado Pago com vencimento em 3 dias.</span>
+                    </p>
+                </div>
+                <p class="erro-campo" th:if="${#fields.hasErrors('formaPagamento')}" th:errors="*{formaPagamento}">Erro</p>
+            </fieldset>
+        </div>
+
+        <section class="resumo" aria-labelledby="titulo-resumo">
+            <h2 id="titulo-resumo">Resumo do pedido</h2>
+            <ul class="itens-resumo">
+                <li th:each="item : ${resumo.itens}">
+                    <span th:text="|${item.quantidade} x ${item.produto.nome}|">1 x Produto</span>
+                    <span th:text="${#numbers.formatCurrency(item.subtotal)}">R$ 0,00</span>
+                </li>
+            </ul>
+            <dl th:replace="~{fragmentos :: valores(${resumo})}"></dl>
+            <p class="dica">O CPF da sua conta vai como identificação do pagador no Mercado Pago.</p>
+            <p class="dica">Os produtos ficam reservados para você até o fim do prazo de pagamento.</p>
+            <div class="acoes-formulario">
+                <button type="submit" class="botao">Confirmar pedido e pagar</button>
+            </div>
+        </section>
+    </form>
+</main>
+<footer th:replace="~{fragmentos :: rodape}"></footer>
+<script th:src="@{/js/cep.js}" defer></script>
+</body>
+</html>

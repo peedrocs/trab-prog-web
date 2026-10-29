@@ -9,12 +9,17 @@
 
     <h1 th:text="${produto.id == null} ? 'Novo produto' : 'Editar produto'">Novo produto</h1>
 
-    <form class="formulario" method="post" th:action="@{/admin/produtos/salvar}" th:object="${produto}">
+    <form class="formulario" method="post" enctype="multipart/form-data"
+          th:action="@{/admin/produtos/salvar}" th:object="${produto}">
         <input type="hidden" th:field="*{id}">
+        <input type="hidden" th:field="*{imagemUrl}">
 
         <div class="campo">
             <label for="nome">Nome</label>
-            <input type="text" th:field="*{nome}" required maxlength="100">
+            <input type="text" th:field="*{nome}" required maxlength="100"
+                   th:aria-invalid="${#fields.hasErrors('nome')} ? 'true'"
+                   th:aria-describedby="${#fields.hasErrors('nome')} ? 'nome-erro'">
+            <p class="erro-campo" id="nome-erro" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}">Erro</p>
         </div>
 
         <div class="campo">
@@ -22,28 +27,45 @@
             <textarea th:field="*{descricao}" rows="4" maxlength="1000"></textarea>
         </div>
 
-        <div class="campo">
-            <label for="preco">Preço (R$)</label>
-            <input type="number" th:field="*{preco}" step="0.01" min="0.01" required>
-        </div>
+        <div class="grade-campos">
+            <div class="campo">
+                <label for="preco">Preço (R$)</label>
+                <input type="number" th:field="*{preco}" step="0.01" min="0.01" required
+                       th:aria-invalid="${#fields.hasErrors('preco')} ? 'true'"
+                       th:aria-describedby="${#fields.hasErrors('preco')} ? 'preco-erro'">
+                <p class="erro-campo" id="preco-erro" th:if="${#fields.hasErrors('preco')}" th:errors="*{preco}">Erro</p>
+            </div>
 
-        <div class="campo">
-            <label for="estoque">Estoque</label>
-            <input type="number" th:field="*{estoque}" min="0" step="1" required>
+            <div class="campo">
+                <label for="estoque">Estoque</label>
+                <input type="number" th:field="*{estoque}" min="0" step="1" required
+                       th:aria-invalid="${#fields.hasErrors('estoque')} ? 'true'"
+                       th:aria-describedby="${#fields.hasErrors('estoque')} ? 'estoque-erro'">
+                <p class="erro-campo" id="estoque-erro" th:if="${#fields.hasErrors('estoque')}" th:errors="*{estoque}">Erro</p>
+            </div>
         </div>
 
         <div class="campo">
             <label for="categoria">Categoria</label>
-            <select th:field="*{categoria}" required>
+            <select th:field="*{categoria}" required
+                    th:aria-invalid="${#fields.hasErrors('categoria')} ? 'true'"
+                    th:aria-describedby="${#fields.hasErrors('categoria')} ? 'categoria-erro'">
                 <option value="">Selecione uma categoria</option>
                 <option th:each="categoria : ${categorias}" th:value="${categoria.id}" th:text="${categoria.nome}">Categoria</option>
             </select>
+            <p class="erro-campo" id="categoria-erro" th:if="${#fields.hasErrors('categoria')}" th:errors="*{categoria}">Erro</p>
         </div>
 
         <div class="campo">
-            <label for="imagemUrl">URL da imagem (opcional)</label>
-            <input type="text" th:field="*{imagemUrl}" maxlength="255" aria-describedby="imagemUrl-dica">
-            <p class="dica" id="imagemUrl-dica">Ex.: /imagens/caneta.svg ou um endereço https://</p>
+            <label for="imagem">Imagem (opcional)</label>
+            <img class="previa-imagem" th:if="${produto.imagemUrl}" th:src="@{${produto.imagemUrl}}" alt="Imagem atual do produto">
+            <input type="file" id="imagem" name="imagem" accept="image/png, image/jpeg, image/webp" aria-describedby="imagem-dica">
+            <p class="dica" id="imagem-dica">PNG, JPG ou WEBP de até 2 MB. Se não escolher um arquivo, a imagem atual continua.</p>
+        </div>
+
+        <div class="campo-marcar">
+            <input type="checkbox" th:field="*{ativo}">
+            <label th:for="${#ids.prev('ativo')}">Produto ativo (aparece na loja)</label>
         </div>
 
         <div class="acoes-formulario">

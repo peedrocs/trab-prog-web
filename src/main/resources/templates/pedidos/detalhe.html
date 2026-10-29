@@ -14,14 +14,46 @@
         Status: <span th:class="|selo status-${pedido.status}|" th:text="${pedido.status.descricao}">Status</span>
     </p>
 
-    <div th:replace="~{fragmentos :: itensPedido(${pedido})}"></div>
+    <div class="aviso" th:if="${pedido.status.name() == 'AGUARDANDO_PAGAMENTO'}">
+        <p>
+            Este pedido está esperando o pagamento até
+            <strong th:text="${#temporals.format(pedido.prazoPagamento, 'dd/MM/yyyy HH:mm')}">01/01/2026 10:30</strong>.
+            Depois disso ele é cancelado e os produtos voltam para o estoque.
+        </p>
+        <a class="botao" th:href="@{/pedidos/{id}/pagamento(id=${pedido.id})}">Pagar agora</a>
+    </div>
 
-    <section class="resumo" aria-labelledby="titulo-resumo">
-        <h2 id="titulo-resumo">Resumo</h2>
-        <dl>
-            <dt class="total">Total</dt>
-            <dd class="total" th:text="${#numbers.formatCurrency(pedido.total)}">R$ 0,00</dd>
-        </dl>
+    <p th:if="${pedido.codigoRastreio}">
+        Código de rastreio: <strong th:text="${pedido.codigoRastreio}">BR123456789BR</strong>
+    </p>
+
+    <div class="detalhe-pedido">
+        <section aria-labelledby="titulo-itens">
+            <h2 id="titulo-itens">Itens</h2>
+            <div th:replace="~{fragmentos :: itensPedido(${pedido})}"></div>
+
+            <th:block th:if="${pedido.status.name() == 'ENTREGUE'}">
+                <p class="dica">Gostou da compra? Conte para os outros clientes:</p>
+                <ul>
+                    <li th:each="item : ${pedido.itens}">
+                        <a th:href="@{/produtos/{id}#titulo-avaliacoes(id=${item.produto.id})}"
+                           th:text="|Avaliar ${item.produto.nome}|">Avaliar produto</a>
+                    </li>
+                </ul>
+            </th:block>
+        </section>
+
+        <section class="resumo" aria-labelledby="titulo-resumo">
+            <h2 id="titulo-resumo">Resumo</h2>
+            <dl th:replace="~{fragmentos :: valores(${pedido})}"></dl>
+            <p><strong>Pagamento:</strong> <span th:text="${pedido.formaPagamento.descricao}">Pix</span></p>
+            <p><strong>Entrega em:</strong> <span th:text="${pedido.enderecoEntrega.descricao}">Endereço</span></p>
+        </section>
+    </div>
+
+    <section aria-labelledby="titulo-andamento">
+        <h2 id="titulo-andamento">Andamento do pedido</h2>
+        <ol th:replace="~{fragmentos :: linhaDoTempo(${pedido})}"></ol>
     </section>
 </main>
 <footer th:replace="~{fragmentos :: rodape}"></footer>
