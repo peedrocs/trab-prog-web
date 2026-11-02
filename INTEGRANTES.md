@@ -9,5 +9,5 @@ Disciplina: Programação Web - UFMS
 | Guilherme Carvalho de Oliveira | Definição do tema, problema de negócio e documentação |
 | Gustavo de Freitas Cabrera | Entidades JPA, repositories e banco MySQL no Docker |
 | Lucas dos Reis Schweich | Configuração inicial do Spring Security e planejamento de acessibilidade |
-| Marcus Vinícius Perez da Silva Balbuena | Diagrama de casos de uso |
+| Marcus Vinícius Perez da Silva Balbuena | Diagrama de casos de uso e banco MySQL no Docker |
 | Pedro Cavalcante Sanches | Regras de negócio, controllers e planejamento dos diferenciais |
