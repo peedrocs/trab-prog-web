@@ -14,7 +14,7 @@ faz. No diagrama isso aparece como herança entre os atores.
 O diagrama foi feito no Astah UML. O arquivo original é
 [diagrama-casos-de-uso.asta](diagrama-casos-de-uso.asta) e a imagem exportada é esta:
 
-![Diagrama de casos de uso](imagens/diagrama-casos-de-uso.png)
+![Diagrama de casos de uso](Imagens/diagrama-casos-de-uso.png)
 
 Para abrir ou editar: Astah UML, menu **Arquivo > Abrir**. Para gerar a imagem de novo:
 **Arquivo > Exportar Imagem**, formato PNG.
