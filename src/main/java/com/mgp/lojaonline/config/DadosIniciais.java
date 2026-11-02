@@ -51,14 +51,14 @@ public class DadosIniciais implements CommandLineRunner {
             Categoria escolar = criarCategoria("Material escolar");
             Categoria escritorio = criarCategoria("Escritório");
 
-            criarProduto("Caneta esferográfica azul", "Tinta azul, ponta média de 1,0 mm e escrita macia.", "2.50", 120, "/imagens/caneta.svg", canetas);
-            criarProduto("Caneta esferográfica preta", "Tinta preta, ponta média de 1,0 mm e escrita macia.", "2.50", 0, "/imagens/caneta.svg", canetas);
-            criarProduto("Caderno universitário 10 matérias", "Capa dura, 200 folhas pautadas e espiral.", "24.90", 35, "/imagens/caderno.svg", cadernos);
-            criarProduto("Caderno brochura 96 folhas", "Capa flexível, 96 folhas pautadas.", "9.90", 50, "/imagens/caderno.svg", cadernos);
-            criarProduto("Lápis de cor 24 cores", "Estojo com 24 cores, mina macia e resistente.", "32.00", 18, "/imagens/escolar.svg", escolar);
-            criarProduto("Borracha branca", "Borracha macia que não mancha o papel.", "1.80", 200, "/imagens/escolar.svg", escolar);
-            criarProduto("Grampeador de mesa", "Grampeia até 25 folhas, usa grampos 26/6.", "29.90", 12, "/imagens/escritorio.svg", escritorio);
-            criarProduto("Pasta catálogo 50 envelopes", "Pasta tamanho ofício com 50 envelopes plásticos.", "18.50", 9, "/imagens/escritorio.svg", escritorio);
+            criarProduto("Caneta esferográfica azul", "Tinta azul, ponta média de 1,0 mm e escrita macia.", "2.50", 120, "/imagens/caneta-azul.jpg", canetas);
+            criarProduto("Caneta esferográfica preta", "Tinta preta, ponta média de 1,0 mm e escrita macia.", "2.50", 0, "/imagens/caneta-preta.jpg", canetas);
+            criarProduto("Caderno universitário 10 matérias", "Capa dura, 200 folhas pautadas e espiral.", "24.90", 35, "/imagens/caderno-universitario.jpg", cadernos);
+            criarProduto("Caderno brochura 96 folhas", "Capa flexível, 96 folhas pautadas.", "9.90", 50, "/imagens/caderno-brochura.jpg", cadernos);
+            criarProduto("Lápis de cor 24 cores", "Estojo com 24 cores, mina macia e resistente.", "32.00", 18, "/imagens/lapis-de-cor.jpg", escolar);
+            criarProduto("Borracha branca", "Borracha macia que não mancha o papel.", "1.80", 200, "/imagens/borracha.jpg", escolar);
+            criarProduto("Grampeador de mesa", "Grampeia até 25 folhas, usa grampos 26/6.", "29.90", 12, "/imagens/grampeador.jpg", escritorio);
+            criarProduto("Pasta catálogo 50 envelopes", "Pasta tamanho ofício com 50 envelopes plásticos.", "18.50", 9, "/imagens/pasta-catalogo.jpg", escritorio);
         }
 
         if (cupomRepository.count() == 0) {
