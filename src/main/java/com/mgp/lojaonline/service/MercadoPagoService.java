@@ -81,6 +81,7 @@ public class MercadoPagoService {
                 "identification", identificacao(pedido.getUsuario())));
         corpo.put("external_reference", pedido.getId().toString());
         corpo.put("back_urls", Map.of("success", paginaDoPedido, "pending", paginaDoPedido, "failure", paginaDoPedido));
+        corpo.put("notification_url", urlLoja + "/webhook/mercadopago?source_news=webhooks");
         // so cartao de credito: tira boleto, Pix, debito e as outras formas
         corpo.put("payment_methods", Map.of(
                 "excluded_payment_types", List.of(
